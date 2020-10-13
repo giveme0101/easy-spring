@@ -1,30 +1,28 @@
 package org.spring.framework.core.context;
 
 import lombok.extern.slf4j.Slf4j;
-import org.spring.framework.core.Autowired;
 import org.spring.framework.core.aware.BeanNameAware;
 import org.spring.framework.core.beandefinition.BeanDefinition;
 import org.spring.framework.core.beandefinition.BeanDefinitionHolder;
 import org.spring.framework.core.config.BeanPostProcessor;
 import org.spring.framework.core.config.InitializingBean;
+import org.spring.framework.core.config.InstantiationAwareBeanPostProcessor;
 import org.spring.framework.core.factorybean.FactoryBean;
-import org.spring.framework.core.util.EscapeUtil;
+import org.spring.framework.core.util.BeanNameUtil;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
  * @Description
- * @name AutowiredBeanFactory
+ * @name DefaultListableBeanFactory
  * @Date 2020/09/17 13:29
  */
 @Slf4j
-public class AutowiredBeanFactory implements BeanFactory {
+public class DefaultListableBeanFactory implements BeanFactory {
 
     private Map<String, Object> singletonObjects = new ConcurrentHashMap<>();
 
@@ -56,7 +54,31 @@ public class AutowiredBeanFactory implements BeanFactory {
 
     @Override
     public <T> T getBean(Class<T> beanClass) {
-        throw new UnsupportedOperationException();
+
+        BeanDefinition beanDefinition = BeanDefinitionHolder.get(beanClass);
+        if (null == beanDefinition){
+            return null;
+        }
+
+        String beanName = BeanNameUtil.getBeanName(beanClass);
+
+        if (beanDefinition.getIsPrototype()) {
+            return (T) doCreateBean(beanName, beanDefinition);
+        }
+
+        if (beanDefinition.getIsLazyInit()) {
+            Object bean = doCreateBean(beanName, beanDefinition);
+            singletonObjects.put(beanName, bean);
+            return (T) bean;
+        }
+
+        if (beanDefinition.getIsFactoryBean()){
+            Object bean = singletonObjects.get(beanName);
+            bean = ((FactoryBean) bean).getObject();
+            return (T) bean;
+        }
+
+        return (T) singletonObjects.get(beanName);
     }
 
     @Override
@@ -104,10 +126,21 @@ public class AutowiredBeanFactory implements BeanFactory {
     }
 
     private Object doInstance(Class<?> beanClass){
+
+        if (beanClass.isAssignableFrom(InstantiationAwareBeanPostProcessor.class)) {
+            // TODO 调用前置处理器 return postProcessBeforeInstantiation();
+        }
+
         // TODO 构造器注入
         try {
             Constructor<?> constructor = beanClass.getConstructor();
-            return constructor.newInstance();
+            Object instance = constructor.newInstance();
+
+            if (beanClass.isAssignableFrom(InstantiationAwareBeanPostProcessor.class)) {
+                // TODO 调用后置处理器 return postProcessAfterInstantiation();
+            }
+
+            return instance;
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -121,45 +154,13 @@ public class AutowiredBeanFactory implements BeanFactory {
     }
 
     private void populateBean(Object bean, Class<?> beanClass) {
-
-        // 字段注入
-        Field[] declaredFields = beanClass.getDeclaredFields();
-        for (final Field field : declaredFields) {
-            if (field.isAnnotationPresent(Autowired.class)){
-                try {
-                    field.setAccessible(true);
-                    String requiredBeanName = field.getName();
-                    field.set(bean, getBean(requiredBeanName));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
+        InstantiationAwareBeanPostProcessor autowiredAnnotationBeanPostProcessor = getBean(AutowiredAnnotationBeanPostProcessor.class);
+        if (null != autowiredAnnotationBeanPostProcessor) {
+            autowiredAnnotationBeanPostProcessor.postProcessProperties(bean, BeanNameUtil.getBeanName(beanClass));
         }
-
-        // Setter注入
-        Method[] declaredMethods = beanClass.getDeclaredMethods();
-        for (final Method method : declaredMethods) {
-            if (method.isAnnotationPresent(Autowired.class)){
-                try {
-                    String setterName = method.getName();
-                    String beanName = transSetterNameToBeanName(setterName);
-                    method.setAccessible(true);
-                    method.invoke(bean, getBean(beanName));
-                } catch (Exception ex){
-                    ex.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private String transSetterNameToBeanName(String setterName) {
-        String beanName = setterName.substring(3);
-        beanName = EscapeUtil.firstCharLowerCase(beanName);
-        return beanName;
     }
 
     private void doAware(Object bean, String beanName, Class<?> beanClass) {
-
         if (bean instanceof BeanNameAware){
             log.debug("invoke BeanNameAware: {}", beanClass.getName());
             ((BeanNameAware) bean).setBeanName(beanName);

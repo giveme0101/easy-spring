@@ -1,6 +1,9 @@
 package org.spring.framework.core.context;
 
+import org.spring.framework.core.beandefinition.BeanDefinitionHolder;
 import org.spring.framework.core.beandefinition.BeanDefinitionReader;
+import org.spring.framework.core.util.AnnotationConfigUtil;
+import org.spring.framework.core.util.ContextLoader;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
@@ -14,13 +17,15 @@ public class AnnotationConfigApplicationContext extends AbstractApplicationConte
 
     private BeanFactory beanFactory;
 
-    public AnnotationConfigApplicationContext() {
+    private AnnotationConfigApplicationContext() {
         beanDefinitionReader = new BeanDefinitionReader();
-        this.beanFactory = new AutowiredBeanFactory();
+        this.beanFactory = new DefaultListableBeanFactory();
     }
 
     public AnnotationConfigApplicationContext(Class<?>... configClass) {
         this();
+        ContextLoader.put(this);
+        BeanDefinitionHolder.putAll(AnnotationConfigUtil.registerAnnotationConfigClass());
         this.beanDefinitionReader.register(configClass);
         this.refresh();
     }
