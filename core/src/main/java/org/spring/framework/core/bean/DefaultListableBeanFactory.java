@@ -176,6 +176,13 @@ public class DefaultListableBeanFactory implements BeanFactory {
             BeanDefinition beanDefinition = BeanDefinitionHolder.get(beanClass);
             autowiredAnnotationBeanPostProcessor.postProcessProperties(bean, BeanUtil.getBeanName(beanDefinition));
         }
+
+        InstantiationAwareBeanPostProcessor valueAnnotationBeanPostProcessor = (ValueAnnotationBeanPostProcessor) singletonObjects.get("valueAnnotationBeanPostProcessor");
+        if (null != valueAnnotationBeanPostProcessor) {
+            BeanDefinition beanDefinition = BeanDefinitionHolder.get(beanClass);
+            valueAnnotationBeanPostProcessor.postProcessProperties(bean, BeanUtil.getBeanName(beanDefinition));
+        }
+
     }
 
     private void doAware(Object bean, String beanName, Class<?> beanClass) {

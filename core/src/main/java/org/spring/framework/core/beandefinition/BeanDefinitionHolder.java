@@ -2,9 +2,7 @@ package org.spring.framework.core.beandefinition;
 
 import org.spring.framework.core.util.BeanUtil;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -15,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class BeanDefinitionHolder {
 
-    private static Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
+    private static Map<String, BeanDefinition> beanDefinitionMap = new LinkedHashMap<>();
     private static Map<Class, Set<BeanDefinition>> beanClassDefinitionMap = new ConcurrentHashMap<>();
 
     public static void putAll(Set<BeanDefinition> beanDefinitionSet) {
@@ -56,6 +54,6 @@ public class BeanDefinitionHolder {
     }
 
     public static Map<String, BeanDefinition> getBeanDefinitionMap() {
-        return beanDefinitionMap;
+        return new LinkedHashMap<>(beanDefinitionMap);
     }
 }

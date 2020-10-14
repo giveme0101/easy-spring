@@ -1,7 +1,8 @@
 package org.spring.framework.core.util;
 
-import org.spring.framework.core.beandefinition.BeanDefinition;
 import org.spring.framework.core.bean.AutowiredAnnotationBeanPostProcessor;
+import org.spring.framework.core.bean.ValueAnnotationBeanPostProcessor;
+import org.spring.framework.core.beandefinition.BeanDefinition;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,9 +19,13 @@ public class AnnotationConfigUtil {
 
         Set<BeanDefinition> bds = new HashSet<>();
 
-        BeanDefinition bd = new BeanDefinition();
-        bd.setBeanClass(AutowiredAnnotationBeanPostProcessor.class);
-        bds.add(bd);
+        BeanDefinition autowiredBd = new BeanDefinition();
+        autowiredBd.setBeanClass(AutowiredAnnotationBeanPostProcessor.class);
+        bds.add(autowiredBd);
+
+        BeanDefinition valueBd = new BeanDefinition();
+        valueBd.setBeanClass(ValueAnnotationBeanPostProcessor.class);
+        bds.add(valueBd);
 
         return bds;
     }

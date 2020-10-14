@@ -20,6 +20,7 @@ public class AnnotationConfigApplicationContext extends AbstractApplicationConte
     private BeanFactory beanFactory;
 
     private AnnotationConfigApplicationContext() {
+        super();
         beanDefinitionReader = new BeanDefinitionReader();
         this.beanFactory = new DefaultListableBeanFactory();
     }

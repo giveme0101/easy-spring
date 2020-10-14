@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
  * @Author kevin xiajun94@FoxMail.com
  * @Description
  *
- * TODO 无法回调 InstantiationAwareBeanPostProcessor, BeanFactoryAware 接口，BeanFactory 没有生命周期
+ * TODO 无法回调 InstantiationAwareBeanPostProcessor, BeanFactoryAware 接口
  *
  * @name AutowiredAnnotationBeanPostProcessor
  * @Date 2020/10/13 14:04
@@ -38,33 +38,37 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
         // 字段注入
         Field[] declaredFields = bean.getClass().getDeclaredFields();
         for (final Field field : declaredFields) {
-            if (field.isAnnotationPresent(Autowired.class)){
-                try {
-                    field.setAccessible(true);
-                    Class fieldClass = field.getType();
-                    Object fileInstance = getBeanFactory().getBean(fieldClass);
-                    field.set(bean, fileInstance);
-                    log.debug("inject {} {}", bean.getClass().getSimpleName(), fileInstance);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+            if (!field.isAnnotationPresent(Autowired.class)){
+                continue;
+            }
+
+            try {
+                field.setAccessible(true);
+                Class fieldClass = field.getType();
+                Object fileInstance = getBeanFactory().getBean(fieldClass);
+                field.set(bean, fileInstance);
+                log.debug("@Autowired {} {}", bean.getClass().getSimpleName(), fileInstance);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
         }
 
         // Setter注入
         Method[] declaredMethods = bean.getClass().getDeclaredMethods();
         for (final Method method : declaredMethods) {
-            if (method.isAnnotationPresent(Autowired.class)){
-                try {
-                    String setterName = method.getName();
-                    String requiredBeanName = transSetterNameToBeanName(setterName);
-                    method.setAccessible(true);
-                    Object fileInstance = getBeanFactory().getBean(requiredBeanName);
-                    method.invoke(bean, fileInstance);
-                    log.debug("inject {} {}", bean.getClass().getSimpleName(), fileInstance);
-                } catch (Exception ex){
-                    ex.printStackTrace();
-                }
+            if (!method.isAnnotationPresent(Autowired.class)){
+                continue;
+            }
+
+            try {
+                String setterName = method.getName();
+                String requiredBeanName = transSetterNameToBeanName(setterName);
+                method.setAccessible(true);
+                Object fileInstance = getBeanFactory().getBean(requiredBeanName);
+                method.invoke(bean, fileInstance);
+                log.debug("@Autowired {} {}", bean.getClass().getSimpleName(), fileInstance);
+            } catch (Exception ex){
+                ex.printStackTrace();
             }
         }
     }

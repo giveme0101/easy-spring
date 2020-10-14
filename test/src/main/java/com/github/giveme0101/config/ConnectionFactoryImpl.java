@@ -2,7 +2,6 @@ package com.github.giveme0101.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
@@ -12,21 +11,31 @@ import java.sql.SQLException;
  */
 public class ConnectionFactoryImpl implements ConnectionFactory {
 
-    static {
+    private final String driverClassName;
+    private final String url;
+    private final String username;
+    private final String password;
+
+
+    public ConnectionFactoryImpl(String driverClassName, String url, String username, String password) {
+        this.driverClassName = driverClassName;
+        this.url = url;
+        this.username = username;
+        this.password = password;
+
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Class.forName(this.driverClassName);
+        } catch (ClassNotFoundException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public Connection getConnection(){
+    public Connection getConnection() {
         try {
-            return DriverManager.getConnection("jdbc:mysql://localhost:3306/demo?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC", "root", "root");
-        } catch (SQLException exception) {
-           throw new RuntimeException(exception);
+            return DriverManager.getConnection(url, username, password);
+        } catch (Exception exception) {
+            throw new RuntimeException(exception);
         }
     }
-
 }
