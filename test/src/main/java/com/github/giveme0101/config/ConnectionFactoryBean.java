@@ -12,16 +12,16 @@ import org.spring.framework.core.bean.FactoryBean;
  */
 @Slf4j
 @Component
-public class ConnectionFactoryBean implements FactoryBean<ConnectionFactoryImpl> {
+public class ConnectionFactoryBean implements FactoryBean<ConnectionFactory> {
 
     @Override
-    public ConnectionFactoryImpl getObject() {
+    public ConnectionFactory getObject() {
         return new ConnectionFactoryImpl();
     }
 
     @Override
-    public Class<ConnectionFactoryImpl> getObjectType() {
-        return ConnectionFactoryImpl.class;
+    public Class<ConnectionFactory> getObjectType() {
+        return ConnectionFactory.class;
     }
 
 }
