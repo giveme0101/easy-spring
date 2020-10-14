@@ -1,8 +1,11 @@
 package org.spring.framework.core.beandefinition;
 
 import lombok.extern.slf4j.Slf4j;
-import org.spring.framework.core.*;
-import org.spring.framework.core.factorybean.FactoryBean;
+import org.spring.framework.core.Component;
+import org.spring.framework.core.ComponentScan;
+import org.spring.framework.core.Lazy;
+import org.spring.framework.core.Scope;
+import org.spring.framework.core.bean.FactoryBean;
 import org.spring.framework.core.util.EscapeUtil;
 
 import java.io.File;
@@ -72,9 +75,8 @@ public class BeanDefinitionReader {
                 bd.setIsLazyInit(beanClass.isAnnotationPresent(Lazy.class));
 
                 // 是否是工厂bean
-                if (beanClass.isAssignableFrom(FactoryBean.class)) {
+                if (FactoryBean.class.isAssignableFrom(beanClass)) {
                     bd.setIsFactoryBean(true);
-                    beanName = FactoryBean.BEAN_NAME_PREFIX + beanName;
                 }
 
                 log.debug("register bean: {}", beanClass.getName());

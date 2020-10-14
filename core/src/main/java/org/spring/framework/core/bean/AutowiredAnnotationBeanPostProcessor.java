@@ -1,4 +1,4 @@
-package org.spring.framework.core.context;
+package org.spring.framework.core.bean;
 
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.Autowired;
@@ -41,9 +41,10 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
             if (field.isAnnotationPresent(Autowired.class)){
                 try {
                     field.setAccessible(true);
-                    String requiredBeanName = field.getName();
-                    field.set(bean, getBeanFactory().getBean(requiredBeanName));
-                    log.debug("inject {} {}", bean.getClass().getSimpleName(), requiredBeanName);
+                    Class fieldClass = field.getType();
+                    Object fileInstance = getBeanFactory().getBean(fieldClass);
+                    field.set(bean, fileInstance);
+                    log.debug("inject {} {}", bean.getClass().getSimpleName(), fileInstance);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -58,8 +59,9 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
                     String setterName = method.getName();
                     String requiredBeanName = transSetterNameToBeanName(setterName);
                     method.setAccessible(true);
-                    method.invoke(bean, getBeanFactory().getBean(requiredBeanName));
-                    log.debug("inject {} {}", bean.getClass().getSimpleName(), setterName);
+                    Object fileInstance = getBeanFactory().getBean(requiredBeanName);
+                    method.invoke(bean, fileInstance);
+                    log.debug("inject {} {}", bean.getClass().getSimpleName(), fileInstance);
                 } catch (Exception ex){
                     ex.printStackTrace();
                 }

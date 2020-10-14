@@ -2,10 +2,11 @@ package com.github.giveme0101;
 
 import com.github.giveme0101.entity.Order;
 import com.github.giveme0101.service.IOrderService;
-import com.github.giveme0101.service.impl.OrderServiceImpl;
 import org.spring.framework.core.ComponentScan;
 import org.spring.framework.core.context.AnnotationConfigApplicationContext;
 import org.spring.framework.core.context.ApplicationContext;
+
+import java.util.List;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
@@ -18,19 +19,18 @@ import org.spring.framework.core.context.ApplicationContext;
         "com.github.giveme0101.dao",
         "com.github.giveme0101.service"
 })
-public class Demo {
+public class TestMain {
 
     public static void main(String[] args) {
 
-        ApplicationContext context = new AnnotationConfigApplicationContext(Demo.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext(TestMain.class);
 
-//        IOrderService orderService = context.getBean("orderServiceImpl");
-
-        IOrderService orderService = context.getBean(OrderServiceImpl.class);
-
-        Order orderInfo = orderService.getOrderInfo("T-001");
-
+        IOrderService orderService = context.getBean(IOrderService.class);
+        Order orderInfo = orderService.getOrderInfo("O-00001");
         System.out.println(orderInfo);
+
+        List<Order> orderList = orderService.getOrderList();
+        orderList.stream().forEach(System.out::println);
 
     }
 

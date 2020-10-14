@@ -1,6 +1,6 @@
 package org.spring.framework.core.aware;
 
-import org.spring.framework.core.context.BeanFactory;
+import org.spring.framework.core.bean.BeanFactory;
 
 /**
  * @Author kevin xiajun94@FoxMail.com

@@ -8,6 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.Autowired;
 import org.spring.framework.core.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @Author kevin xiajun94@FoxMail.com
  * @Description
@@ -32,5 +35,23 @@ public class OrderServiceImpl implements IOrderService {
                 .amount(orderDO.getAmount())
                 .createTime(orderDO.getCreateTime())
                 .build();
+    }
+
+    @Override
+    public List<Order> getOrderList() {
+        log.info("getOrderList");
+        List<OrderDO> orderList = orderMapper.selectAll();
+        if (null == orderList){
+            return null;
+        }
+
+        return orderList.stream().map(orderDO -> Order.builder()
+                .orderNo(orderDO.getOrderNo())
+                .buyerId(orderDO.getBuyerId())
+                .sellerId(orderDO.getSellerId())
+                .amount(orderDO.getAmount())
+                .createTime(orderDO.getCreateTime())
+                .build()
+        ).collect(Collectors.toList());
     }
 }

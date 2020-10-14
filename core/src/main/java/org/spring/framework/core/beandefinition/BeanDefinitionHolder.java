@@ -1,6 +1,6 @@
 package org.spring.framework.core.beandefinition;
 
-import org.spring.framework.core.util.BeanNameUtil;
+import org.spring.framework.core.util.BeanUtil;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -23,10 +23,11 @@ public class BeanDefinitionHolder {
     }
 
     public static void put(BeanDefinition beanDefinition){
-        put(BeanNameUtil.getBeanName(beanDefinition.getBeanClass()), beanDefinition);
+        put(BeanUtil.getBeanName(beanDefinition), beanDefinition);
     }
 
     public static void put(String beanName, BeanDefinition beanDefinition){
+
         beanDefinitionMap.put(beanName, beanDefinition);
 
         Class<?> beanClass = beanDefinition.getBeanClass();
@@ -43,7 +44,15 @@ public class BeanDefinitionHolder {
 
     public static BeanDefinition get(Class clazz){
         Set<BeanDefinition> beanDefinitions = beanClassDefinitionMap.get(clazz);
-        return beanDefinitions.isEmpty() ? null: beanDefinitions.toArray(new BeanDefinition[0])[0];
+        if (null == beanDefinitions || beanDefinitions.isEmpty()){
+            return null;
+        }
+
+        if (beanDefinitions.size() != 1){
+            throw new RuntimeException("存在多个。。。");
+        }
+
+        return beanDefinitions.toArray(new BeanDefinition[0])[0];
     }
 
     public static Map<String, BeanDefinition> getBeanDefinitionMap() {

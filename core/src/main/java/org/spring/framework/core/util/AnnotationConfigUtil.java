@@ -1,7 +1,7 @@
 package org.spring.framework.core.util;
 
 import org.spring.framework.core.beandefinition.BeanDefinition;
-import org.spring.framework.core.context.AutowiredAnnotationBeanPostProcessor;
+import org.spring.framework.core.bean.AutowiredAnnotationBeanPostProcessor;
 
 import java.util.HashSet;
 import java.util.Set;

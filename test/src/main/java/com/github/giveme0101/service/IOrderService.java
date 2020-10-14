@@ -2,6 +2,8 @@ package com.github.giveme0101.service;
 
 import com.github.giveme0101.entity.Order;
 
+import java.util.List;
+
 /**
  * @Author kevin xiajun94@FoxMail.com
  * @Description
@@ -11,5 +13,7 @@ import com.github.giveme0101.entity.Order;
 public interface IOrderService {
 
     Order getOrderInfo(String orderCode);
+
+    List<Order> getOrderList();
 
 }

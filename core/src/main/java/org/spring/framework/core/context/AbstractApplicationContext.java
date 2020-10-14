@@ -1,5 +1,7 @@
 package org.spring.framework.core.context;
 
+import org.spring.framework.core.bean.BeanFactory;
+
 /**
  * @Author kevin xiajun94@FoxMail.com
  * @Description

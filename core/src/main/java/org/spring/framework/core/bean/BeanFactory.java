@@ -1,4 +1,4 @@
-package org.spring.framework.core.context;
+package org.spring.framework.core.bean;
 
 /**
  * @Author kevin xiajun94@FoxMail.com

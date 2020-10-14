@@ -39,4 +39,10 @@ public class BeanDefinition {
         this.isPrototype = PROTOTYPE.equals(scope);
         this.scope = scope;
     }
+
+    public void setIsSingleton(boolean isSingleton){
+        this.isSingleton = isSingleton;
+        this.isPrototype = !isSingleton;
+        this.scope = isSingleton ? SINGLETON : PROTOTYPE;
+    }
 }

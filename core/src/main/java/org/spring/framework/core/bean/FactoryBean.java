@@ -1,4 +1,4 @@
-package org.spring.framework.core.factorybean;
+package org.spring.framework.core.bean;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
@@ -12,7 +12,7 @@ public interface FactoryBean<T> {
 
     T getObject();
 
-    Class<?> getObjectType();
+    Class<T> getObjectType();
 
     default boolean isSingleton() {
         return true;

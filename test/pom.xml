@@ -17,6 +17,11 @@
             <groupId>org.spring.framework</groupId>
             <artifactId>core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.21</version>
+        </dependency>
     </dependencies>
 
 

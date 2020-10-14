@@ -13,6 +13,8 @@ import java.util.Date;
 @Data
 public class OrderDO {
 
+    private Integer id;
+
     private String orderNo;
 
     private String buyerId;

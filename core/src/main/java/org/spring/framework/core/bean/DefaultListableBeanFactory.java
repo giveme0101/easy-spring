@@ -1,4 +1,4 @@
-package org.spring.framework.core.context;
+package org.spring.framework.core.bean;
 
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.aware.BeanNameAware;
@@ -7,11 +7,13 @@ import org.spring.framework.core.beandefinition.BeanDefinitionHolder;
 import org.spring.framework.core.config.BeanPostProcessor;
 import org.spring.framework.core.config.InitializingBean;
 import org.spring.framework.core.config.InstantiationAwareBeanPostProcessor;
-import org.spring.framework.core.factorybean.FactoryBean;
-import org.spring.framework.core.util.BeanNameUtil;
+import org.spring.framework.core.util.BeanUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,13 +45,12 @@ public class DefaultListableBeanFactory implements BeanFactory {
             return bean;
         }
 
-        if (beanDefinition.getIsFactoryBean()){
-            Object bean = singletonObjects.get(beanName);
-            bean = ((FactoryBean) bean).getObject();
-            return bean;
+        Object bean = singletonObjects.get(beanName);
+        if (null == bean){
+           return doCreateBean(beanName, beanDefinition);
         }
 
-        return singletonObjects.get(beanName);
+        return bean;
     }
 
     @Override
@@ -60,25 +61,8 @@ public class DefaultListableBeanFactory implements BeanFactory {
             return null;
         }
 
-        String beanName = BeanNameUtil.getBeanName(beanClass);
-
-        if (beanDefinition.getIsPrototype()) {
-            return (T) doCreateBean(beanName, beanDefinition);
-        }
-
-        if (beanDefinition.getIsLazyInit()) {
-            Object bean = doCreateBean(beanName, beanDefinition);
-            singletonObjects.put(beanName, bean);
-            return (T) bean;
-        }
-
-        if (beanDefinition.getIsFactoryBean()){
-            Object bean = singletonObjects.get(beanName);
-            bean = ((FactoryBean) bean).getObject();
-            return (T) bean;
-        }
-
-        return (T) singletonObjects.get(beanName);
+        String beanName = BeanUtil.getBeanName(beanDefinition);
+        return (T) getBean(beanName);
     }
 
     @Override
@@ -87,10 +71,13 @@ public class DefaultListableBeanFactory implements BeanFactory {
         for (final Map.Entry<String, BeanDefinition> entry : beanDefinitionMap.entrySet()) {
 
             String beanName = entry.getKey();
-
             BeanDefinition bd = entry.getValue();
 
             if (bd.getIsPrototype() || bd.getIsLazyInit()){
+                continue;
+            }
+
+            if (singletonObjects.containsKey(beanName)){
                 continue;
             }
 
@@ -100,6 +87,36 @@ public class DefaultListableBeanFactory implements BeanFactory {
     }
 
     private Object doCreateBean(String beanName, BeanDefinition bd) {
+
+        if (bd.getIsFactoryBean()){
+
+            Class<?> factoryBeanClass = bd.getBeanClass();
+            Type type = Arrays.stream(factoryBeanClass.getGenericInterfaces()).filter(i -> FactoryBean.class.isAssignableFrom(factoryBeanClass))
+                    .findFirst().get();
+            Class productBeanClass = (Class)((ParameterizedType) type).getActualTypeArguments()[0];
+            String productBeanName = BeanUtil.getBeanName(bd);
+
+            // 创建工厂bean
+            String factoryBeanName = FactoryBean.BEAN_NAME_PREFIX + productBeanName;
+            FactoryBean factoryBean = (FactoryBean) createBean(factoryBeanName, bd);
+            BeanDefinitionHolder.put(factoryBeanName, bd);
+
+            // 创建工厂bean生产的bean
+            BeanDefinition beanDefinition = new BeanDefinition();
+            beanDefinition.setBeanClass(productBeanClass);
+            beanDefinition.setIsSingleton(factoryBean.isSingleton());
+            BeanDefinitionHolder.put(productBeanName, beanDefinition);
+            if (factoryBean.isSingleton()){
+                singletonObjects.put(productBeanName, factoryBean.getObject());
+            }
+
+            return factoryBean;
+        } else {
+            return createBean(beanName, bd);
+        }
+    }
+
+    private Object createBean(String beanName, BeanDefinition bd) {
 
         Class<?> beanClass = bd.getBeanClass();
 
@@ -154,9 +171,10 @@ public class DefaultListableBeanFactory implements BeanFactory {
     }
 
     private void populateBean(Object bean, Class<?> beanClass) {
-        InstantiationAwareBeanPostProcessor autowiredAnnotationBeanPostProcessor = getBean(AutowiredAnnotationBeanPostProcessor.class);
+        InstantiationAwareBeanPostProcessor autowiredAnnotationBeanPostProcessor = (AutowiredAnnotationBeanPostProcessor) singletonObjects.get("autowiredAnnotationBeanPostProcessor");
         if (null != autowiredAnnotationBeanPostProcessor) {
-            autowiredAnnotationBeanPostProcessor.postProcessProperties(bean, BeanNameUtil.getBeanName(beanClass));
+            BeanDefinition beanDefinition = BeanDefinitionHolder.get(beanClass);
+            autowiredAnnotationBeanPostProcessor.postProcessProperties(bean, BeanUtil.getBeanName(beanDefinition));
         }
     }
 
