@@ -4,8 +4,8 @@ import com.github.giveme0101.dao.OrderMapper;
 import com.github.giveme0101.entity.Order;
 import com.github.giveme0101.entity.OrderDO;
 import com.github.giveme0101.service.IOrderService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.spring.framework.core.Autowired;
 import org.spring.framework.core.Service;
 
 import java.util.List;
@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
+@AllArgsConstructor
 public class OrderServiceImpl implements IOrderService {
 
-    @Autowired
     private OrderMapper orderMapper;
 
     @Override

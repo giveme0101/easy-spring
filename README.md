@@ -13,4 +13,5 @@ A sample IOC framework like spring, ^^
 * [x] InitializingBean
 * [x] BeanNameAware
 * [x] AOP -> 可通过BeanPostProcessor实现
+* [x] 构造器注入
 * [ ] BeanFactoryAware

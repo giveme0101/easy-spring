@@ -9,11 +9,10 @@ import org.spring.framework.core.config.InitializingBean;
 import org.spring.framework.core.config.InstantiationAwareBeanPostProcessor;
 import org.spring.framework.core.util.BeanUtil;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -148,25 +147,41 @@ public class DefaultListableBeanFactory implements BeanFactory {
             // TODO 调用前置处理器 return postProcessBeforeInstantiation();
         }
 
-        // TODO 构造器注入
+        Object instance = null;
+
         try {
-            Constructor<?> constructor = beanClass.getConstructor();
-            Object instance = constructor.newInstance();
+            Constructor<?>[] constructors = beanClass.getConstructors();
+            for (final Constructor<?> constructor : constructors) {
+                Parameter[] parameters = constructor.getParameters();
+                if (parameters.length == 0){
+                    instance = constructor.newInstance();
+                    break;
+                }
+
+                List<Object> params = new ArrayList<>(parameters.length);
+                for (final Parameter parameter : parameters) {
+
+                    Class<?> type = parameter.getType();
+                    Object bean = getBean(type);
+                    if (null == bean){
+                        throw new RuntimeException("无法注入" + type);
+                    }
+
+                    params.add(bean);
+                }
+
+                instance = constructor.newInstance(params.toArray());
+            }
 
             if (InstantiationAwareBeanPostProcessor.class.isAssignableFrom(beanClass)) {
                 // TODO 调用后置处理器 return postProcessAfterInstantiation();
             }
 
             return instance;
-        } catch (NoSuchMethodException e) {
+        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException invocationTargetException) {
-            invocationTargetException.printStackTrace();
         }
+
         return null;
     }
 

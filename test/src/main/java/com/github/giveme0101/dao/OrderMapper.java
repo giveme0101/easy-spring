@@ -3,7 +3,7 @@ package com.github.giveme0101.dao;
 import com.github.giveme0101.config.database.ConnectionFactory;
 import com.github.giveme0101.config.database.SqlTemplate;
 import com.github.giveme0101.entity.OrderDO;
-import org.spring.framework.core.Autowired;
+import lombok.AllArgsConstructor;
 import org.spring.framework.core.Component;
 
 import java.sql.Connection;
@@ -18,9 +18,10 @@ import java.util.List;
  * @Date 2020/09/17 8:54
  */
 @Component
+@AllArgsConstructor
 public class OrderMapper extends SqlTemplate<OrderDO> {
 
-    @Autowired
+//    @Autowired
     private ConnectionFactory connectionFactory;
 
     public OrderDO get(String orderNo){
