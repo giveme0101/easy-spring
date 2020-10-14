@@ -4,9 +4,10 @@ A sample IOC framework like spring, ^^
 
 ## TODO LIST
 
-* [x] @Autowired -> AutowiredAnnotationBeanPostProcessor
+* [x] @Autowired -> AutowiredAnnotationBeanPostProcessor -> InstantiationAwareBeanPostProcessor
 * [x] @ComponentScan
 * [x] @Component
+* [ ] @Resource -> InstantiationAwareBeanPostProcessor
 * [x] BeanPostProcessor
 * [x] FactoryBean（getObject(), getObjectType()）
 * [x] InitializingBean
