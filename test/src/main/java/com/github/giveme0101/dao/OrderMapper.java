@@ -1,7 +1,7 @@
 package com.github.giveme0101.dao;
 
-import com.github.giveme0101.config.ConnectionFactory;
-import com.github.giveme0101.config.SqlTemplate;
+import com.github.giveme0101.config.database.ConnectionFactory;
+import com.github.giveme0101.config.database.SqlTemplate;
 import com.github.giveme0101.entity.OrderDO;
 import org.spring.framework.core.Autowired;
 import org.spring.framework.core.Component;

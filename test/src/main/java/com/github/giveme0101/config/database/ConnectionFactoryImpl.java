@@ -1,4 +1,4 @@
-package com.github.giveme0101.config;
+package com.github.giveme0101.config.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,4 +1,4 @@
-package com.github.giveme0101.config;
+package com.github.giveme0101.config.database;
 
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.Component;

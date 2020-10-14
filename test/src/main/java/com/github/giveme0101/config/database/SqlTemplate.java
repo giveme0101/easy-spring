@@ -1,4 +1,4 @@
-package com.github.giveme0101.config;
+package com.github.giveme0101.config.database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,15 +23,19 @@ public abstract class SqlTemplate<T> {
     }
 
     public List<T> select(Connection conn, String sql, Object[] args){
+
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
         try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt = conn.prepareStatement(sql);
             if (null != args && args.length > 0){
                 for (int i = 0; i < args.length; i++) {
                     pstmt.setObject(i + 1, args[i]);
                 }
             }
 
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             List<T> list = new ArrayList<>();
             while (rs.next()) {
@@ -41,6 +45,12 @@ public abstract class SqlTemplate<T> {
             return list;
         } catch (Exception ex){
             throw new RuntimeException(ex);
+        } finally {
+            try {
+                if (null != rs && !rs.isClosed()) rs.close();
+                if (null != pstmt && !pstmt.isClosed()) pstmt.close();
+                if (null != conn && !conn.isClosed()) conn.close();
+            } catch (Exception ex) {}
         }
     }
 
