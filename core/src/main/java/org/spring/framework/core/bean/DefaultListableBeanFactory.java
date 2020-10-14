@@ -144,7 +144,7 @@ public class DefaultListableBeanFactory implements BeanFactory {
 
     private Object doInstance(Class<?> beanClass){
 
-        if (beanClass.isAssignableFrom(InstantiationAwareBeanPostProcessor.class)) {
+        if (InstantiationAwareBeanPostProcessor.class.isAssignableFrom(beanClass)) {
             // TODO 调用前置处理器 return postProcessBeforeInstantiation();
         }
 
@@ -153,7 +153,7 @@ public class DefaultListableBeanFactory implements BeanFactory {
             Constructor<?> constructor = beanClass.getConstructor();
             Object instance = constructor.newInstance();
 
-            if (beanClass.isAssignableFrom(InstantiationAwareBeanPostProcessor.class)) {
+            if (InstantiationAwareBeanPostProcessor.class.isAssignableFrom(beanClass)) {
                 // TODO 调用后置处理器 return postProcessAfterInstantiation();
             }
 
