@@ -160,7 +160,6 @@ public class DefaultListableBeanFactory implements BeanFactory {
 
                 List<Object> params = new ArrayList<>(parameters.length);
                 for (final Parameter parameter : parameters) {
-
                     Class<?> type = parameter.getType();
                     Object bean = getBean(type);
                     if (null == bean){
@@ -220,7 +219,7 @@ public class DefaultListableBeanFactory implements BeanFactory {
         for (final Object object : singletonObjects.values()) {
             if (object instanceof BeanPostProcessor){
                 BeanPostProcessor postProcessor = (BeanPostProcessor) object;
-                postBean = postProcessor.postProcessBeforeInitialization(bean, beanName);
+                postBean = postProcessor.postProcessAfterInitialization(postBean, beanName);
             }
         }
 
@@ -233,7 +232,7 @@ public class DefaultListableBeanFactory implements BeanFactory {
         for (final Object object : singletonObjects.values()) {
             if (object instanceof BeanPostProcessor){
                 BeanPostProcessor postProcessor = (BeanPostProcessor) object;
-                postBean = postProcessor.postProcessAfterInitialization(bean, beanName);
+                postBean = postProcessor.postProcessBeforeInitialization(postBean, beanName);
             }
         }
 

@@ -1,6 +1,10 @@
 package org.spring.framework.core.context;
 
 import org.spring.framework.core.bean.BeanFactory;
+import org.spring.framework.core.event.ApplicationEventPublish;
+import org.spring.framework.core.event.ApplicationEventPublisher;
+import org.spring.framework.core.event.Event;
+import org.spring.framework.core.event.EventListener;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +17,9 @@ import java.util.Properties;
  * @name AbstractApplicationContext
  * @Date 2020/09/17 9:11
  */
-public abstract class AbstractApplicationContext implements ApplicationContext {
+public abstract class AbstractApplicationContext implements ApplicationContext, ApplicationEventPublish {
+
+    protected ApplicationEventPublish applicationEventPublisher = new ApplicationEventPublisher();
 
     protected String defaultPropertiesLocation = "application.properties";
 
@@ -64,6 +70,21 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
     @Override
     public String getValue(String key) {
         return properties.getProperty(key);
+    }
+
+    @Override
+    public void publish(Event event) {
+        applicationEventPublisher.publish(event);
+    }
+
+    @Override
+    public void addListener(EventListener eventListener) {
+        applicationEventPublisher.addListener(eventListener);
+    }
+
+    @Override
+    public void removeListener(EventListener eventListener) {
+        applicationEventPublisher.removeListener(eventListener);
     }
 
     protected abstract BeanFactory getBeanFactory();

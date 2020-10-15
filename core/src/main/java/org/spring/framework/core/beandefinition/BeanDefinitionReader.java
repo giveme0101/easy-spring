@@ -5,6 +5,7 @@ import org.spring.framework.core.Component;
 import org.spring.framework.core.ComponentScan;
 import org.spring.framework.core.Lazy;
 import org.spring.framework.core.Scope;
+import org.spring.framework.core.aop.InterceptorFactory;
 import org.spring.framework.core.bean.FactoryBean;
 import org.spring.framework.core.util.EscapeUtil;
 
@@ -46,6 +47,9 @@ public class BeanDefinitionReader {
             String[] basePackages = componentScan.basePackage();
 
             for (final String basePackage : basePackages) {
+
+                InterceptorFactory.loadInterceptors(basePackage);
+
                 try {
                     String abstractPath = basePackage.replace(".", "/");
                     URI uri = classLoader.getResource(abstractPath).toURI();

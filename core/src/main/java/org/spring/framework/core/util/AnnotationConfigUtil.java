@@ -1,8 +1,12 @@
 package org.spring.framework.core.util;
 
+import org.spring.framework.core.aop.cglib.CglibAopProxyBeanPostProcessor;
+import org.spring.framework.core.aop.jdk.JdkAopProxyBeanPostProcessor;
 import org.spring.framework.core.bean.AutowiredAnnotationBeanPostProcessor;
 import org.spring.framework.core.bean.ValueAnnotationBeanPostProcessor;
 import org.spring.framework.core.beandefinition.BeanDefinition;
+import org.spring.framework.core.event.ApplicationEventPublisher;
+import org.spring.framework.core.event.EventBeanPostProcessor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,9 +27,25 @@ public class AnnotationConfigUtil {
         autowiredBd.setBeanClass(AutowiredAnnotationBeanPostProcessor.class);
         bds.add(autowiredBd);
 
+        BeanDefinition eventPublisherBd = new BeanDefinition();
+        eventPublisherBd.setBeanClass(ApplicationEventPublisher.class);
+        bds.add(eventPublisherBd);
+
+        BeanDefinition eventBd = new BeanDefinition();
+        eventBd.setBeanClass(EventBeanPostProcessor.class);
+        bds.add(eventBd);
+
         BeanDefinition valueBd = new BeanDefinition();
         valueBd.setBeanClass(ValueAnnotationBeanPostProcessor.class);
         bds.add(valueBd);
+
+        BeanDefinition jdkAopBd = new BeanDefinition();
+        jdkAopBd.setBeanClass(JdkAopProxyBeanPostProcessor.class);
+        bds.add(jdkAopBd);
+
+        BeanDefinition cglibAopBd = new BeanDefinition();
+        cglibAopBd.setBeanClass(CglibAopProxyBeanPostProcessor.class);
+        bds.add(cglibAopBd);
 
         return bds;
     }
