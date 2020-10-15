@@ -30,6 +30,8 @@ public class TestMain {
         Order orderInfo = orderService.getOrderInfo("O-00001");
         System.out.println(orderInfo);
 
+        orderService.setPayed(orderInfo.getOrderNo());
+
         List<Order> orderList = orderService.getOrderList();
         orderList.stream().forEach(System.out::println);
 

@@ -16,4 +16,10 @@ public interface IOrderService {
 
     List<Order> getOrderList();
 
+    void save(Order order);
+
+    void remove(String orderCode);
+
+    void setPayed(String orderCode);
+
 }

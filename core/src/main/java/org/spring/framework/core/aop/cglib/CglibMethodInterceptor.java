@@ -33,7 +33,7 @@ public class CglibMethodInterceptor implements MethodInterceptor {
         Class<?> targetClass = target.getClass();
 
         Class<?>[] interfaces = targetClass.getInterfaces();
-        if (null != interfaces && interfaces.length > 1){
+        if (null != interfaces && interfaces.length > 0){
             return target;
         }
 

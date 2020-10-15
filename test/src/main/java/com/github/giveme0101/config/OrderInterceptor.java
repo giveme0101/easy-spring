@@ -1,7 +1,7 @@
 package com.github.giveme0101.config;
 
 
-import com.github.giveme0101.dao.OrderMapper;
+import com.github.giveme0101.dao.IOrderMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.aop.Interceptor;
 import org.spring.framework.core.aop.MethodInvocation;
@@ -16,7 +16,7 @@ public class OrderInterceptor extends Interceptor {
 
     @Override
     public boolean supports(Object bean) {
-        return bean instanceof OrderMapper;
+        return bean instanceof IOrderMapper;
     }
 
     @Override

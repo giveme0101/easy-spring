@@ -1,6 +1,9 @@
 package com.github.giveme0101.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -11,6 +14,9 @@ import java.util.Date;
  * @Date 2020/09/17 8:54
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderDO {
 
     private Integer id;
@@ -22,6 +28,8 @@ public class OrderDO {
     private String sellerId;
 
     private Double amount;
+
+    private String status;
 
     private Date createTime;
 

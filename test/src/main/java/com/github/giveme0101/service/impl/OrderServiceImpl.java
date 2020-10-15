@@ -1,8 +1,10 @@
 package com.github.giveme0101.service.impl;
 
-import com.github.giveme0101.dao.OrderMapper;
+import com.github.giveme0101.converter.OrderConverter;
+import com.github.giveme0101.dao.IOrderMapper;
 import com.github.giveme0101.entity.Order;
 import com.github.giveme0101.entity.OrderDO;
+import com.github.giveme0101.entity.OrderStatusEnum;
 import com.github.giveme0101.service.IOrderService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,36 +24,35 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class OrderServiceImpl implements IOrderService {
 
-    private OrderMapper orderMapper;
+    private IOrderMapper orderMapper;
+    private OrderConverter orderConverter;
 
     @Override
     public Order getOrderInfo(String orderCode) {
-        log.info("getOrderInfo: {}", orderCode);
         OrderDO orderDO = orderMapper.get(orderCode);
-        return orderDO == null ? null : Order.builder()
-                .orderNo(orderDO.getOrderNo())
-                .buyerId(orderDO.getBuyerId())
-                .sellerId(orderDO.getSellerId())
-                .amount(orderDO.getAmount())
-                .createTime(orderDO.getCreateTime())
-                .build();
+        return orderDO == null ? null : orderConverter.convertToBO(orderDO);
     }
 
     @Override
     public List<Order> getOrderList() {
-        log.info("getOrderList");
         List<OrderDO> orderList = orderMapper.selectAll();
-        if (null == orderList){
-            return null;
-        }
-
-        return orderList.stream().map(orderDO -> Order.builder()
-                .orderNo(orderDO.getOrderNo())
-                .buyerId(orderDO.getBuyerId())
-                .sellerId(orderDO.getSellerId())
-                .amount(orderDO.getAmount())
-                .createTime(orderDO.getCreateTime())
-                .build()
-        ).collect(Collectors.toList());
+        return orderList.stream().map(orderConverter::convertToBO).collect(Collectors.toList());
     }
+
+    @Override
+    public void save(Order order) {
+        OrderDO orderDO = orderConverter.convertToDO(order);
+        orderMapper.insert(orderDO);
+    }
+
+    @Override
+    public void remove(String orderCode) {
+        orderMapper.remove(orderCode);
+    }
+
+    @Override
+    public void setPayed(String orderCode) {
+        orderMapper.setStatus(OrderStatusEnum.PAYED, orderCode);
+    }
+
 }
