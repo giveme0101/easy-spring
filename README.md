@@ -6,9 +6,9 @@ A sample IOC framework like spring, ^^
 
 * [x] @ComponentScan
 * [x] @Component
-* [x] @Autowired -> AutowiredAnnotationBeanPostProcessor -> InstantiationAwareBeanPostProcessor
-* [x] @Value -> ValueAnnotationBeanPostProcessor -> InstantiationAwareBeanPostProcessor
 * [x] BeanPostProcessor
+* [x] @Autowired -> AutowiredAnnotationBeanPostProcessor -> InstantiationAwareBeanPostProcessor -> BeanPostProcessor
+* [x] @Value -> ValueAnnotationBeanPostProcessor -> InstantiationAwareBeanPostProcessor -> BeanPostProcessor
 * [x] FactoryBean（getObject(), getObjectType()）
 * [x] InitializingBean
 * [x] AOP 
@@ -25,4 +25,5 @@ A sample IOC framework like spring, ^^
 * [ ] ApplicationContextAware （无法对ApplicationContext创建bean生命周期）
 * [ ] DisposableBean bean销毁
 * [x] ApplicationEvent (容器启动完毕事件)
-* [ ] CommandLineRunner, 准备基于Event添加事件回调
+* [x] CommandLineRunner
+* [ ] 循环依赖

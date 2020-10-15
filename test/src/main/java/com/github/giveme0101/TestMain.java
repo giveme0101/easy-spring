@@ -16,6 +16,7 @@ import java.util.List;
  */
 @ComponentScan(basePackage = {
         "com.github.giveme0101.config",
+        "com.github.giveme0101.converter",
         "com.github.giveme0101.dao",
         "com.github.giveme0101.service"
 })

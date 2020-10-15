@@ -1,5 +1,6 @@
 package com.github.giveme0101.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.Component;
 import org.spring.framework.core.config.CommandLineRunner;
 import org.spring.framework.core.event.Event;
@@ -11,16 +12,17 @@ import org.spring.framework.core.event.EventListener;
  * @name AppMonitor
  * @Date 2020/10/15 11:20
  */
+@Slf4j
 @Component
 public class AppMonitor implements CommandLineRunner, EventListener {
 
     @Override
     public void run(String... args) {
-        System.out.println("App start up");
+        log.debug("CommandLineRunner");
     }
 
     @Override
     public void onEvent(Event event) {
-        System.out.println("APP STARTING...");
+        log.debug("event: {}", event);
     }
 }

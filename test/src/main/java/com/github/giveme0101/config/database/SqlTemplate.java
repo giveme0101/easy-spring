@@ -3,7 +3,6 @@ package com.github.giveme0101.config.database;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,16 +12,14 @@ import java.util.List;
  * @name SqlTemplate
  * @Date 2020/10/14 11:17
  */
-public abstract class SqlTemplate<T> {
+public class SqlTemplate {
 
-    public abstract T map(ResultSet rs) throws SQLException;
-
-    public T selectOne(Connection conn, String sql, Object[] args){
-        List<T> list = select(conn, sql, args);
+    public static <T> T selectOne(Connection conn, String sql, Object[] args, ResultConverter converter){
+        List<T> list = select(conn, sql, args, converter);
         return list.get(0);
     }
 
-    public List<T> select(Connection conn, String sql, Object[] args){
+    public static <T> List<T> select(Connection conn, String sql, Object[] args, ResultConverter converter){
 
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -39,7 +36,7 @@ public abstract class SqlTemplate<T> {
 
             List<T> list = new ArrayList<>();
             while (rs.next()) {
-                list.add(map(rs));
+                list.add(converter.map(rs));
             }
 
             return list;

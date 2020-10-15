@@ -1,5 +1,7 @@
 package org.spring.framework.core.bean;
 
+import java.util.Map;
+
 /**
  * @Author kevin xiajun94@FoxMail.com
  * @Description
@@ -11,6 +13,8 @@ public interface BeanFactory {
     Object getBean(String beanName);
 
     <T> T getBean(Class<T> beanClass);
+
+    <T> Map<String, T> getBeansOfType(Class<T> beanClass);
 
     void refresh();
 

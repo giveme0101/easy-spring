@@ -41,7 +41,7 @@ public class BeanDefinitionHolder {
     }
 
     public static BeanDefinition get(Class clazz){
-        Set<BeanDefinition> beanDefinitions = beanClassDefinitionMap.get(clazz);
+        Collection<BeanDefinition> beanDefinitions = getBeansOfType(clazz);
         if (null == beanDefinitions || beanDefinitions.isEmpty()){
             return null;
         }
@@ -51,6 +51,10 @@ public class BeanDefinitionHolder {
         }
 
         return beanDefinitions.toArray(new BeanDefinition[0])[0];
+    }
+
+    public static Collection<BeanDefinition> getBeansOfType(Class clazz){
+       return beanClassDefinitionMap.get(clazz);
     }
 
     public static Map<String, BeanDefinition> getBeanDefinitionMap() {

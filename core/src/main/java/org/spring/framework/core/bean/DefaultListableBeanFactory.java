@@ -10,10 +10,7 @@ import org.spring.framework.core.config.InstantiationAwareBeanPostProcessor;
 import org.spring.framework.core.util.BeanUtil;
 
 import java.lang.reflect.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -62,6 +59,21 @@ public class DefaultListableBeanFactory implements BeanFactory {
 
         String beanName = BeanUtil.getBeanName(beanDefinition);
         return (T) getBean(beanName);
+    }
+
+    @Override
+    public <T> Map<String, T> getBeansOfType(Class<T> beanClass) {
+
+        Collection<BeanDefinition> beansOfType = BeanDefinitionHolder.getBeansOfType(beanClass);
+        Map<String, T> resultMap = new HashMap<>(beansOfType.size());
+
+        for (final BeanDefinition bd : beansOfType) {
+            String beanName = BeanUtil.getBeanName(bd);
+            Object bean = getBean(beanName);
+            resultMap.put(beanName, (T) bean);
+        }
+
+        return resultMap;
     }
 
     @Override

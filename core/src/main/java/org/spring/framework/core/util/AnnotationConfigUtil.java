@@ -5,7 +5,6 @@ import org.spring.framework.core.aop.jdk.JdkAopProxyBeanPostProcessor;
 import org.spring.framework.core.bean.AutowiredAnnotationBeanPostProcessor;
 import org.spring.framework.core.bean.ValueAnnotationBeanPostProcessor;
 import org.spring.framework.core.beandefinition.BeanDefinition;
-import org.spring.framework.core.event.ApplicationEventPublisher;
 import org.spring.framework.core.event.EventBeanPostProcessor;
 
 import java.util.HashSet;
@@ -26,10 +25,6 @@ public class AnnotationConfigUtil {
         BeanDefinition autowiredBd = new BeanDefinition();
         autowiredBd.setBeanClass(AutowiredAnnotationBeanPostProcessor.class);
         bds.add(autowiredBd);
-
-        BeanDefinition eventPublisherBd = new BeanDefinition();
-        eventPublisherBd.setBeanClass(ApplicationEventPublisher.class);
-        bds.add(eventPublisherBd);
 
         BeanDefinition eventBd = new BeanDefinition();
         eventBd.setBeanClass(EventBeanPostProcessor.class);

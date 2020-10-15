@@ -2,12 +2,12 @@ package org.spring.framework.core;
 
 import java.lang.annotation.*;
 
-@Component
-@Inherited
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
+@Component
+@Inherited
 public @interface Service {
 
-//    String value() default "";
+    String value() default "";
 
 }

@@ -1,15 +1,14 @@
 package org.spring.framework.core.context;
 
 import org.spring.framework.core.bean.BeanFactory;
-import org.spring.framework.core.event.ApplicationEventPublish;
-import org.spring.framework.core.event.ApplicationEventPublisher;
+import org.spring.framework.core.config.CommandLineRunner;
 import org.spring.framework.core.event.Event;
 import org.spring.framework.core.event.EventListener;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
@@ -17,9 +16,9 @@ import java.util.Properties;
  * @name AbstractApplicationContext
  * @Date 2020/09/17 9:11
  */
-public abstract class AbstractApplicationContext implements ApplicationContext, ApplicationEventPublish {
+public abstract class AbstractApplicationContext implements ApplicationContext {
 
-    protected ApplicationEventPublish applicationEventPublisher = new ApplicationEventPublisher();
+    protected List<EventListener> eventObservableList = new ArrayList<>();
 
     protected String defaultPropertiesLocation = "application.properties";
 
@@ -44,8 +43,15 @@ public abstract class AbstractApplicationContext implements ApplicationContext, 
     }
 
     @Override
+    public <T> Map<String, T> getBeansOfType(Class<T> beanClass) {
+        return getBeanFactory().getBeansOfType(beanClass);
+    }
+
+    @Override
     public void refresh() {
         onRefresh();
+        this.publish(Event.STARTING);
+        this.getBeansOfType(CommandLineRunner.class).values().forEach(runner -> runner.run());
     }
 
     protected void onRefresh() {
@@ -74,17 +80,23 @@ public abstract class AbstractApplicationContext implements ApplicationContext, 
 
     @Override
     public void publish(Event event) {
-        applicationEventPublisher.publish(event);
+        Optional.ofNullable(eventObservableList).ifPresent(list -> {
+            for (final EventListener observable : list) {
+                try {
+                    observable.onEvent(event);
+                } catch (Exception ex){}
+            }
+        });
     }
 
     @Override
     public void addListener(EventListener eventListener) {
-        applicationEventPublisher.addListener(eventListener);
+        this.eventObservableList.add(eventListener);
     }
 
     @Override
     public void removeListener(EventListener eventListener) {
-        applicationEventPublisher.removeListener(eventListener);
+        eventObservableList.remove(eventListener);
     }
 
     protected abstract BeanFactory getBeanFactory();

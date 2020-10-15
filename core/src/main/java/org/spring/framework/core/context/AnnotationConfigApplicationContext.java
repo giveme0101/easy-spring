@@ -4,7 +4,6 @@ import org.spring.framework.core.bean.BeanFactory;
 import org.spring.framework.core.bean.DefaultListableBeanFactory;
 import org.spring.framework.core.beandefinition.BeanDefinitionHolder;
 import org.spring.framework.core.beandefinition.BeanDefinitionReader;
-import org.spring.framework.core.event.Event;
 import org.spring.framework.core.util.AnnotationConfigUtil;
 import org.spring.framework.core.util.ContextLoader;
 
@@ -32,7 +31,6 @@ public class AnnotationConfigApplicationContext extends AbstractApplicationConte
         BeanDefinitionHolder.putAll(AnnotationConfigUtil.registerAnnotationConfigClass());
         this.beanDefinitionReader.register(configClass);
         this.refresh();
-        applicationEventPublisher.publish(Event.STARTING);
     }
 
     @Override

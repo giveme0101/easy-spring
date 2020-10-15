@@ -46,10 +46,9 @@ public class BeanDefinitionReader {
             ComponentScan componentScan = configClass.getAnnotation(ComponentScan.class);
             String[] basePackages = componentScan.basePackage();
 
+            InterceptorFactory.loadInterceptors(basePackages);
+
             for (final String basePackage : basePackages) {
-
-                InterceptorFactory.loadInterceptors(basePackage);
-
                 try {
                     String abstractPath = basePackage.replace(".", "/");
                     URI uri = classLoader.getResource(abstractPath).toURI();
@@ -121,6 +120,7 @@ public class BeanDefinitionReader {
     }
 
     private boolean registerBeanClass(Class beanClass){
+
         Annotation[] annotations = beanClass.getAnnotations();
         for (final Annotation annotation : annotations) {
 

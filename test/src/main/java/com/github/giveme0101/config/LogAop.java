@@ -24,9 +24,9 @@ public class LogAop implements BeanPostProcessor {
         if (bean instanceof IOrderService){
             return Proxy.newProxyInstance(LogAop.class.getClassLoader(), new Class[]{IOrderService.class}, (Object proxy, Method method, Object[] args) -> {
 
-                log.debug("============ aop before: {}", method.getName());
+                log.debug("aop before: {}", method.getName());
                 Object result = method.invoke(bean, args);
-                log.debug("============ aop result: {}", result);
+                log.debug("aop result: {}", result);
 
                 return result;
             });

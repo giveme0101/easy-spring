@@ -1,7 +1,7 @@
 package org.spring.framework.core.aop;
 
 
-import org.spring.framework.core.util.ReflectionUtil;
+import org.reflections.Reflections;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 public class InterceptorFactory {
     private static List<Interceptor> interceptors = new ArrayList<>();
 
-    public static void loadInterceptors(String packageName) {
-        // get the implementations of the Interceptor in the specified package
-        Set<Class<? extends Interceptor>> subClasses = ReflectionUtil.getSubClass(packageName, Interceptor.class);
+    public static void loadInterceptors(String... packageName) {
+        Reflections reflections = new Reflections(packageName);
+        Set<Class<? extends Interceptor>> subClasses = reflections.getSubTypesOf(Interceptor.class);
         for (Class<? extends Interceptor> subClass : subClasses) {
             try {
                 interceptors.add(subClass.newInstance());
