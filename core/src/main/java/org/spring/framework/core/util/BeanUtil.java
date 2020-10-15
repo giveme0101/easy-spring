@@ -29,17 +29,4 @@ public class BeanUtil {
         return EscapeUtil.firstCharLowerCase(bd.getBeanClass().getSimpleName());
     }
 
-    public static Class getBeanType(BeanDefinition bd){
-
-        if (bd.getIsFactoryBean()){
-            Class beanClass = bd.getBeanClass();
-            Type type = Arrays.stream(beanClass.getGenericInterfaces()).filter(i -> FactoryBean.class.isAssignableFrom(beanClass))
-                    .findFirst().get();
-            Class actualTypeArguments = (Class)((ParameterizedType) type).getActualTypeArguments()[0];
-
-            return actualTypeArguments;
-        }
-
-        return bd.getBeanClass();
-    }
 }
