@@ -128,11 +128,11 @@ public class BeanDefinitionReader {
 
             if (aClass == Component.class){
                 Component component = (Component) beanClass.getAnnotation(Component.class);
-                String beanName = component.value();
-                if (null == beanName || beanName.isEmpty()){
+//                String beanName = component.value();
+//                if (null == beanName || beanName.isEmpty()){
                     String className = beanClass.getSimpleName();
-                    beanName = EscapeUtil.firstCharLowerCase(className);
-                }
+                    String beanName = EscapeUtil.firstCharLowerCase(className);
+//                }
                 beanClassMap.put(beanName, beanClass);
             }
 

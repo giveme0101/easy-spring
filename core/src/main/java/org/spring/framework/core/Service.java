@@ -8,6 +8,6 @@ import java.lang.annotation.*;
 @Inherited
 public @interface Service {
 
-    String value() default "";
+//    String value() default "";
 
 }
