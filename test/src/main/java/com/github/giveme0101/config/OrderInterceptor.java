@@ -15,8 +15,8 @@ public class OrderInterceptor extends Interceptor {
     }
 
     @Override
-    public boolean supports(Object bean) {
-        return bean instanceof IOrderMapper;
+    public Class getTargetClass() {
+        return IOrderMapper.class;
     }
 
     @Override

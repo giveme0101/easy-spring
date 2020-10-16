@@ -6,7 +6,7 @@ import com.github.giveme0101.entity.Order;
 import com.github.giveme0101.entity.OrderDO;
 import com.github.giveme0101.entity.OrderStatusEnum;
 import com.github.giveme0101.service.IOrderService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.Service;
 
@@ -21,11 +21,12 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrderServiceImpl implements IOrderService {
 
-    private IOrderMapper orderMapper;
-    private OrderConverter orderConverter;
+    // FIXME 此处如果是IOrderMapper的实现类会报错
+    private final IOrderMapper orderMapper;
+    private final OrderConverter orderConverter;
 
     @Override
     public Order getOrderInfo(String orderCode) {

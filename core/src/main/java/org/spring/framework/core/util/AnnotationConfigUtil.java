@@ -1,7 +1,6 @@
 package org.spring.framework.core.util;
 
-import org.spring.framework.core.aop.cglib.CglibAopProxyBeanPostProcessor;
-import org.spring.framework.core.aop.jdk.JdkAopProxyBeanPostProcessor;
+import org.spring.framework.core.aop.AopProxyBeanPostProcessor;
 import org.spring.framework.core.bean.AutowiredAnnotationBeanPostProcessor;
 import org.spring.framework.core.bean.ValueAnnotationBeanPostProcessor;
 import org.spring.framework.core.beandefinition.BeanDefinition;
@@ -34,13 +33,9 @@ public class AnnotationConfigUtil {
         valueBd.setBeanClass(ValueAnnotationBeanPostProcessor.class);
         bds.add(valueBd);
 
-        BeanDefinition jdkAopBd = new BeanDefinition();
-        jdkAopBd.setBeanClass(JdkAopProxyBeanPostProcessor.class);
-        bds.add(jdkAopBd);
-
-        BeanDefinition cglibAopBd = new BeanDefinition();
-        cglibAopBd.setBeanClass(CglibAopProxyBeanPostProcessor.class);
-        bds.add(cglibAopBd);
+        BeanDefinition aopBd = new BeanDefinition();
+        aopBd.setBeanClass(AopProxyBeanPostProcessor.class);
+        bds.add(aopBd);
 
         return bds;
     }

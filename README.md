@@ -27,3 +27,4 @@ A sample IOC framework like spring, ^^
 * [x] ApplicationEvent (容器启动完毕事件)
 * [x] CommandLineRunner
 * [ ] 循环依赖
+* [ ] Interceptor代理接口， @Autowire/构造器注入 接口的实现报错！

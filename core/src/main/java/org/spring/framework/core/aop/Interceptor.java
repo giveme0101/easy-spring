@@ -11,9 +11,7 @@ public abstract class Interceptor {
         return -1;
     }
 
-    public boolean supports(Object bean) {
-        return true;
-    }
+    public abstract Class getTargetClass();
 
     public abstract Object intercept(MethodInvocation methodInvocation);
 }

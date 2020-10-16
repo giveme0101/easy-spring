@@ -28,21 +28,20 @@ public class CglibMethodInterceptor implements MethodInterceptor {
         this.interceptor = interceptor;
     }
 
-    public static Object wrap(Object target, Interceptor interceptor) {
+    public static Object wrap(Object target, Interceptor interceptor){
+        return wrap(target.getClass().getClassLoader(), target, interceptor);
+    }
+
+    public static Object wrap(ClassLoader classLoader, Object target, Interceptor interceptor) {
 
         Class<?> targetClass = target.getClass();
-
-        Class<?>[] interfaces = targetClass.getInterfaces();
-        if (null != interfaces && interfaces.length > 0){
-            return target;
-        }
 
         if (null == applicationContext){
             applicationContext = ContextLoader.getContext();
         }
 
         Enhancer enhancer = new Enhancer();
-        enhancer.setClassLoader(targetClass.getClassLoader());
+        enhancer.setClassLoader(classLoader);
         enhancer.setSuperclass(targetClass);
         enhancer.setCallback(new CglibMethodInterceptor(target, interceptor));
 
@@ -50,7 +49,6 @@ public class CglibMethodInterceptor implements MethodInterceptor {
         for (final Constructor<?> constructor : declaredConstructors) {
             Class<?>[] parameterTypes = constructor.getParameterTypes();
             try {
-
                 List param = new ArrayList(parameterTypes.length);
                 for (final Class<?> type : parameterTypes) {
                     param.add(applicationContext.getBean(type));

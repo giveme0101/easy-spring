@@ -23,6 +23,9 @@ public class MethodInvocation {
     public Object proceed() {
         Object result;
         try {
+
+            // TODO Object的方法不代理
+
             result = targetMethod.invoke(targetObject, args);
             log.info("invoke target method successfully ,result is: [{}]", result);
         } catch (IllegalAccessException | InvocationTargetException e) {
