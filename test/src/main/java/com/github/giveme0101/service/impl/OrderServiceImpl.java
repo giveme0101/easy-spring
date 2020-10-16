@@ -8,7 +8,7 @@ import com.github.giveme0101.entity.OrderStatusEnum;
 import com.github.giveme0101.service.IOrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.spring.framework.core.Service;
+import org.spring.framework.core.annotation.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;

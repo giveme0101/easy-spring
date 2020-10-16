@@ -5,8 +5,8 @@ import org.spring.framework.jdbc.ResultSetConverter;
 import com.github.giveme0101.entity.Order;
 import com.github.giveme0101.entity.OrderDO;
 import com.github.giveme0101.entity.OrderStatusEnum;
-import org.spring.framework.core.Autowired;
-import org.spring.framework.core.Component;
+import org.spring.framework.core.annotation.Autowired;
+import org.spring.framework.core.annotation.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

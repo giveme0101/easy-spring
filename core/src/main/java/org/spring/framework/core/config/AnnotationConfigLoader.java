@@ -1,4 +1,4 @@
-package org.spring.framework.core.util;
+package org.spring.framework.core.config;
 
 import org.spring.framework.aop.AopProxyBeanPostProcessor;
 import org.spring.framework.core.bean.AutowiredAnnotationBeanPostProcessor;
@@ -15,25 +15,24 @@ import java.util.Set;
 /**
  * @Author kevin xiajun94@FoxMail.com
  * @Description
- * @name AnnotationConfigUtil
+ * @name AnnotationConfigLoader
  * @Date 2020/10/13 14:55
  */
-public class AnnotationConfigUtil {
+public class AnnotationConfigLoader {
 
     public static Set<BeanDefinition> registerAnnotationConfigClass(){
+        return new HashSet<BeanDefinition>(){{
 
-        Set<BeanDefinition> bds = new HashSet<>();
+            add(BeanDefinitionParser.parse(EventBeanPostProcessor.class));
+            add(BeanDefinitionParser.parse(ValueAnnotationBeanPostProcessor.class));
+            add(BeanDefinitionParser.parse(AutowiredAnnotationBeanPostProcessor.class));
 
-        bds.add(BeanDefinitionParser.parse(EventBeanPostProcessor.class));
-        bds.add(BeanDefinitionParser.parse(ValueAnnotationBeanPostProcessor.class));
-        bds.add(BeanDefinitionParser.parse(AutowiredAnnotationBeanPostProcessor.class));
+            add(BeanDefinitionParser.parse(AopProxyBeanPostProcessor.class));
 
-        bds.add(BeanDefinitionParser.parse(AopProxyBeanPostProcessor.class));
+            add(BeanDefinitionParser.parse(ConnectionFactoryBean.class));
+            add(BeanDefinitionParser.parse(JdbcTemplateImpl.class));
 
-        bds.add(BeanDefinitionParser.parse(ConnectionFactoryBean.class));
-        bds.add(BeanDefinitionParser.parse(JdbcTemplateImpl.class));
-
-        return bds;
+        }};
     }
 
 }

@@ -1,7 +1,7 @@
 package org.spring.framework.core.bean;
 
 import org.reflections.Reflections;
-import org.spring.framework.core.Import;
+import org.spring.framework.core.annotation.Import;
 import org.spring.framework.core.beandefinition.BeanDefinitionHolder;
 
 import java.util.Set;

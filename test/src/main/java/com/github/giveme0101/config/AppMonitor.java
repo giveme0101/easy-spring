@@ -1,8 +1,8 @@
 package com.github.giveme0101.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.spring.framework.core.Component;
-import org.spring.framework.core.config.CommandLineRunner;
+import org.spring.framework.core.annotation.Component;
+import org.spring.framework.core.CommandLineRunner;
 import org.spring.framework.core.event.Event;
 import org.spring.framework.core.event.EventListener;
 

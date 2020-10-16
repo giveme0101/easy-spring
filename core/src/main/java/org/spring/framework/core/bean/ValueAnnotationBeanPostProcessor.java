@@ -1,9 +1,9 @@
 package org.spring.framework.core.bean;
 
 import lombok.extern.slf4j.Slf4j;
-import org.spring.framework.core.Value;
-import org.spring.framework.core.config.EnvironmentResolver;
-import org.spring.framework.core.config.InstantiationAwareBeanPostProcessor;
+import org.spring.framework.core.annotation.Value;
+import org.spring.framework.core.EnvironmentResolver;
+import org.spring.framework.core.InstantiationAwareBeanPostProcessor;
 import org.spring.framework.core.util.ContextLoader;
 
 import java.lang.reflect.Field;

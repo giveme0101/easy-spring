@@ -6,7 +6,7 @@ import com.github.giveme0101.dao.IOrderMapper;
 import com.github.giveme0101.entity.OrderDO;
 import com.github.giveme0101.entity.OrderStatusEnum;
 import lombok.AllArgsConstructor;
-import org.spring.framework.core.Component;
+import org.spring.framework.core.annotation.Component;
 
 import java.util.List;
 

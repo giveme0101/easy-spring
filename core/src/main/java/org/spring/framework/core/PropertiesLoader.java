@@ -1,4 +1,4 @@
-package org.spring.framework.core.config;
+package org.spring.framework.core;
 
 import java.io.IOException;
 import java.util.Properties;

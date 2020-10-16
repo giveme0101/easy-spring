@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.aware.BeanNameAware;
 import org.spring.framework.core.beandefinition.BeanDefinition;
 import org.spring.framework.core.beandefinition.BeanDefinitionHolder;
-import org.spring.framework.core.config.BeanPostProcessor;
-import org.spring.framework.core.config.InitializingBean;
-import org.spring.framework.core.config.InstantiationAwareBeanPostProcessor;
+import org.spring.framework.core.BeanPostProcessor;
+import org.spring.framework.core.InitializingBean;
+import org.spring.framework.core.InstantiationAwareBeanPostProcessor;
 import org.spring.framework.core.util.BeanNameUtil;
 
 import java.lang.reflect.*;

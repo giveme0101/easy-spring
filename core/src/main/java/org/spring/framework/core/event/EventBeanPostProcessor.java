@@ -1,6 +1,6 @@
 package org.spring.framework.core.event;
 
-import org.spring.framework.core.config.BeanPostProcessor;
+import org.spring.framework.core.BeanPostProcessor;
 import org.spring.framework.core.util.ContextLoader;
 
 /**

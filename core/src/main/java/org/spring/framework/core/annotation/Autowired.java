@@ -1,4 +1,4 @@
-package org.spring.framework.core;
+package org.spring.framework.core.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package org.spring.framework.core.config;
+package org.spring.framework.core;
 
 /**
  * @Author kevin xiajun94@FoxMail.com

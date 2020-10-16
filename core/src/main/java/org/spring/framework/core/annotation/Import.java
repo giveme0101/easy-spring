@@ -1,4 +1,4 @@
-package org.spring.framework.core;
+package org.spring.framework.core.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,8 +7,8 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Scope {
+public @interface Import {
 
-    String value() default "singleton";
+    Class[] value();
 
 }

@@ -1,7 +1,7 @@
 package org.spring.framework.core.bean;
 
-import org.spring.framework.core.Lazy;
-import org.spring.framework.core.Scope;
+import org.spring.framework.core.annotation.Lazy;
+import org.spring.framework.core.annotation.Scope;
 import org.spring.framework.core.beandefinition.BeanDefinition;
 
 /**

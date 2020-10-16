@@ -1,11 +1,12 @@
-package org.spring.framework.core;
+package org.spring.framework.core.annotation;
 
 import java.lang.annotation.*;
 
-@Inherited
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Component {
+@Component
+@Inherited
+public @interface Service {
 
 //    String value() default "";
 

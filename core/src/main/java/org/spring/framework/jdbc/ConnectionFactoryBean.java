@@ -1,7 +1,7 @@
 package org.spring.framework.jdbc;
 
 import lombok.extern.slf4j.Slf4j;
-import org.spring.framework.core.Value;
+import org.spring.framework.core.annotation.Value;
 import org.spring.framework.core.bean.FactoryBean;
 
 /**

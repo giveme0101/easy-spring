@@ -2,8 +2,8 @@ package com.github.giveme0101.config;
 
 import com.github.giveme0101.service.IOrderService;
 import lombok.extern.slf4j.Slf4j;
-import org.spring.framework.core.Component;
-import org.spring.framework.core.config.BeanPostProcessor;
+import org.spring.framework.core.annotation.Component;
+import org.spring.framework.core.BeanPostProcessor;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;

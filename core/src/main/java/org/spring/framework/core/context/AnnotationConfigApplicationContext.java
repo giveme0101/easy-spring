@@ -4,7 +4,7 @@ import org.spring.framework.core.bean.BeanFactory;
 import org.spring.framework.core.bean.DefaultListableBeanFactory;
 import org.spring.framework.core.beandefinition.BeanDefinitionHolder;
 import org.spring.framework.core.beandefinition.BeanDefinitionReader;
-import org.spring.framework.core.util.AnnotationConfigUtil;
+import org.spring.framework.core.config.AnnotationConfigLoader;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
@@ -22,7 +22,7 @@ public class AnnotationConfigApplicationContext extends AbstractApplicationConte
         super();
         beanDefinitionReader = new BeanDefinitionReader();
         this.beanFactory = new DefaultListableBeanFactory();
-        BeanDefinitionHolder.putAll(AnnotationConfigUtil.registerAnnotationConfigClass());
+        BeanDefinitionHolder.putAll(AnnotationConfigLoader.registerAnnotationConfigClass());
         this.beanDefinitionReader.register(configClass);
         this.refresh();
     }

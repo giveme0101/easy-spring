@@ -1,6 +1,6 @@
 package org.spring.framework.aop;
 
-import org.spring.framework.core.config.BeanPostProcessor;
+import org.spring.framework.core.BeanPostProcessor;
 
 import java.util.List;
 
