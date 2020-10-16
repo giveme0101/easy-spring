@@ -1,7 +1,7 @@
 package com.github.giveme0101.service.impl;
 
 import com.github.giveme0101.converter.OrderConverter;
-import com.github.giveme0101.dao.impl.OrderMapper;
+import com.github.giveme0101.dao.IOrderMapper;
 import com.github.giveme0101.entity.Order;
 import com.github.giveme0101.entity.OrderDO;
 import com.github.giveme0101.entity.OrderStatusEnum;
@@ -24,7 +24,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements IOrderService {
 
-    private final OrderMapper orderMapper;
+    // FIXME 使用interceptor拦截接口后，无法用接口的实现注入
+//    private final OrderMapper orderMapper;
+    private final IOrderMapper orderMapper;
     private final OrderConverter orderConverter;
 
     @Override

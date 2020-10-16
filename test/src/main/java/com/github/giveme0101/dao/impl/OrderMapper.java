@@ -1,6 +1,6 @@
 package com.github.giveme0101.dao.impl;
 
-import com.github.giveme0101.config.jdbc.JdbcTemplateImpl;
+import com.github.giveme0101.config.jdbc.JdbcTemplate;
 import com.github.giveme0101.converter.OrderConverter;
 import com.github.giveme0101.dao.IOrderMapper;
 import com.github.giveme0101.entity.OrderDO;
@@ -21,7 +21,7 @@ import java.util.List;
 public class OrderMapper implements IOrderMapper {
 
     private OrderConverter converter;
-    private JdbcTemplateImpl jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @Override
     public OrderDO get(String orderNo){
