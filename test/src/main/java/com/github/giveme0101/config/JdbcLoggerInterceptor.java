@@ -1,13 +1,13 @@
 package com.github.giveme0101.config;
 
 
-import com.github.giveme0101.dao.IOrderMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.aop.Interceptor;
 import org.spring.framework.aop.MethodInvocation;
+import org.spring.framework.jdbc.JdbcTemplate;
 
 @Slf4j
-public class OrderInterceptor extends Interceptor {
+public class JdbcLoggerInterceptor extends Interceptor {
 
     @Override
     public int getOrder() {
@@ -16,14 +16,15 @@ public class OrderInterceptor extends Interceptor {
 
     @Override
     public Class getTargetClass() {
-        return IOrderMapper.class;
+        return JdbcTemplate.class;
     }
 
     @Override
     public Object intercept(MethodInvocation methodInvocation) {
-        log.debug("orderMapper.{}({})", methodInvocation.getTargetMethod().getName(), methodInvocation.getArgs());
+        log.info("SQL：{}", methodInvocation.getArgs()[0]);
+        log.info("param：{}", methodInvocation.getArgs()[1]);
         Object result = methodInvocation.proceed();
-        log.debug("result: {}", result);
+        log.info("result：{}", result);
         return result;
     }
 }

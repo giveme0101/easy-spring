@@ -11,7 +11,7 @@ import org.spring.framework.jdbc.JdbcTemplateImpl;
 import org.spring.framework.jdbc.tm.TransactionManager;
 import org.spring.framework.jdbc.tm.TransactionalAnnotationBeanPostProcessor;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -23,7 +23,7 @@ import java.util.Set;
 public class AnnotationConfigLoader {
 
     public static Set<BeanDefinition> registerAnnotationConfigClass(){
-        return new HashSet<BeanDefinition>(){{
+        return new LinkedHashSet<BeanDefinition>(){{
 
             add(BeanDefinitionParser.parse(EventBeanPostProcessor.class));
             add(BeanDefinitionParser.parse(ValueAnnotationBeanPostProcessor.class));

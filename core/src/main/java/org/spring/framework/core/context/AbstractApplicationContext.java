@@ -1,9 +1,10 @@
 package org.spring.framework.core.context;
 
-import org.spring.framework.core.bean.BeanFactory;
 import org.spring.framework.core.CommandLineRunner;
+import org.spring.framework.core.bean.BeanFactory;
 import org.spring.framework.core.event.Event;
 import org.spring.framework.core.event.EventListener;
+import org.spring.framework.core.util.BannerPrinter;
 import org.spring.framework.core.util.ContextLoader;
 
 import java.io.IOException;
@@ -26,6 +27,7 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
     protected final Properties properties;
 
     public AbstractApplicationContext() {
+        BannerPrinter.print();
         ContextLoader.put(this);
         try {
             properties = this.getProperties(defaultPropertiesLocation);

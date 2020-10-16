@@ -1,12 +1,11 @@
 package com.github.giveme0101.dao.impl;
 
-import org.spring.framework.jdbc.JdbcTemplate;
 import com.github.giveme0101.converter.OrderConverter;
 import com.github.giveme0101.dao.IOrderMapper;
 import com.github.giveme0101.entity.OrderDO;
-import com.github.giveme0101.entity.OrderStatusEnum;
 import lombok.AllArgsConstructor;
 import org.spring.framework.core.annotation.Component;
+import org.spring.framework.jdbc.JdbcTemplate;
 
 import java.util.List;
 
@@ -41,13 +40,21 @@ public class OrderMapper implements IOrderMapper {
     }
 
     @Override
+    public void update(OrderDO orderDO){
+        jdbcTemplate.update("update `order` set status = ? where order_no = ? ", new Object[]{
+                orderDO.getStatus(), orderDO.getOrderNo()
+        });
+    }
+
+    @Override
     public void remove(String orderNo){
         jdbcTemplate.delete("delete from `order` where order_no = ? ", new Object[]{orderNo});
     }
 
     @Override
-    public void setStatus(OrderStatusEnum orderStatusEnum, String orderNo){
-        jdbcTemplate.update("update `order` set status = ? where order_no = ? ", new Object[]{orderStatusEnum.getStatus(), orderNo});
+    public boolean exist(String orderNo) {
+        int count = jdbcTemplate.selectOne("select count(1) as c from `order` where order_no = ? limit 1 ", new Object[]{orderNo}, rs -> rs.getInt("c"));
+        return count > 0;
     }
 
 }

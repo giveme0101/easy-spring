@@ -95,7 +95,7 @@ public class ProxyConnectionFactory implements PooledConnectionFactory {
         }
     }
 
-    private Integer getTid(){
+    private Long getTid(){
         return transactionManager != null ? transactionManager.getTid() : null;
     }
 

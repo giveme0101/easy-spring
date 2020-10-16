@@ -4,7 +4,6 @@ import com.github.giveme0101.converter.OrderConverter;
 import com.github.giveme0101.dao.IOrderMapper;
 import com.github.giveme0101.entity.Order;
 import com.github.giveme0101.entity.OrderDO;
-import com.github.giveme0101.entity.OrderStatusEnum;
 import com.github.giveme0101.service.IOrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,9 +49,13 @@ public class OrderServiceImpl implements IOrderService {
     @Transactional
     public void save(Order order) {
 
-        OrderDO orderInfo = orderMapper.get(order.getOrderNo());
-        if (null == orderInfo){
-            OrderDO orderDO = orderConverter.convertToDO(order);
+        boolean exist = orderMapper.exist(order.getOrderNo());
+
+        OrderDO orderDO = orderConverter.convertToDO(order);
+
+        if (exist){
+            orderMapper.update(orderDO);
+        } else {
             orderMapper.insert(orderDO);
         }
 
@@ -65,11 +68,6 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public void delete(String orderCode) {
         orderMapper.remove(orderCode);
-    }
-
-    @Override
-    public void payOrder(String orderCode) {
-        orderMapper.setStatus(OrderStatusEnum.PAYED, orderCode);
     }
 
 }

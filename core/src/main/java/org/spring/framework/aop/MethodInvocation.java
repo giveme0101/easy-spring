@@ -31,7 +31,6 @@ public class MethodInvocation {
             }
 
             result = targetMethod.invoke(targetObject, args);
-            log.info("invoke target method successfully ,result is: [{}]", result);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e.getCause());
         }

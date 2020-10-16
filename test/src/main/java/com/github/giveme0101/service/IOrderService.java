@@ -20,6 +20,4 @@ public interface IOrderService {
 
     void delete(String orderCode);
 
-    void payOrder(String orderCode);
-
 }

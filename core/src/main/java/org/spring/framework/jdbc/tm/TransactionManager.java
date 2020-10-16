@@ -15,12 +15,12 @@ public class TransactionManager {
 
     private PooledConnectionFactory connectionFactory;
 
-    private static ThreadLocal<Integer> TRANS_HOLDER = new ThreadLocal<>();
+    private static ThreadLocal<Long> TRANS_HOLDER = new ThreadLocal<>();
 
     public void openTransaction(){
         if (null == TRANS_HOLDER.get()){
-            Integer tsid = new Random().nextInt();
-            TRANS_HOLDER.set(tsid);
+            Long tsid = new Random().nextLong();
+            TRANS_HOLDER.set(Math.abs(tsid));
             getConnectionFactory().openConnection();
         }
     }
@@ -42,7 +42,7 @@ public class TransactionManager {
         return getTid() != null;
     }
 
-    public Integer getTid(){
+    public Long getTid(){
         return TRANS_HOLDER.get();
     }
 
