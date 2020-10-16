@@ -1,6 +1,6 @@
 package org.spring.framework.core.util;
 
-import org.spring.framework.core.beandefinition.BeanDefinition;
+import org.spring.framework.core.bd.BeanDefinition;
 import org.spring.framework.core.bean.FactoryBean;
 
 import java.lang.reflect.ParameterizedType;

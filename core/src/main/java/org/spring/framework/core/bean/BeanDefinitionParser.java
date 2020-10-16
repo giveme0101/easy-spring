@@ -2,7 +2,7 @@ package org.spring.framework.core.bean;
 
 import org.spring.framework.core.annotation.Lazy;
 import org.spring.framework.core.annotation.Scope;
-import org.spring.framework.core.beandefinition.BeanDefinition;
+import org.spring.framework.core.bd.BeanDefinition;
 
 /**
  * @Author kevin xiajun94@FoxMail.com

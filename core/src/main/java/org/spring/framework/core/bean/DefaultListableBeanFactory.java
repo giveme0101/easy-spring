@@ -2,8 +2,8 @@ package org.spring.framework.core.bean;
 
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.aware.BeanNameAware;
-import org.spring.framework.core.beandefinition.BeanDefinition;
-import org.spring.framework.core.beandefinition.BeanDefinitionHolder;
+import org.spring.framework.core.bd.BeanDefinition;
+import org.spring.framework.core.bd.BeanDefinitionHolder;
 import org.spring.framework.core.BeanPostProcessor;
 import org.spring.framework.core.InitializingBean;
 import org.spring.framework.core.InstantiationAwareBeanPostProcessor;

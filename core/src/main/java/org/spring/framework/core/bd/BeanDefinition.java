@@ -1,4 +1,4 @@
-package org.spring.framework.core.beandefinition;
+package org.spring.framework.core.bd;
 
 import lombok.Getter;
 import lombok.Setter;

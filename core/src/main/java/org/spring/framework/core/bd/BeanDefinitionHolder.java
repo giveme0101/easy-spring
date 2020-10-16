@@ -1,4 +1,4 @@
-package org.spring.framework.core.beandefinition;
+package org.spring.framework.core.bd;
 
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.util.BeanNameUtil;

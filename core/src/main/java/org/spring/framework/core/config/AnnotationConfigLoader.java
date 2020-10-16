@@ -4,7 +4,7 @@ import org.spring.framework.aop.AopProxyBeanPostProcessor;
 import org.spring.framework.core.bean.AutowiredAnnotationBeanPostProcessor;
 import org.spring.framework.core.bean.BeanDefinitionParser;
 import org.spring.framework.core.bean.ValueAnnotationBeanPostProcessor;
-import org.spring.framework.core.beandefinition.BeanDefinition;
+import org.spring.framework.core.bd.BeanDefinition;
 import org.spring.framework.core.event.EventBeanPostProcessor;
 import org.spring.framework.jdbc.ConnectionFactoryBean;
 import org.spring.framework.jdbc.JdbcTemplateImpl;
