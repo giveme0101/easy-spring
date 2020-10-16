@@ -3,10 +3,9 @@ package org.spring.framework.core.beandefinition;
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.Component;
 import org.spring.framework.core.ComponentScan;
-import org.spring.framework.core.Lazy;
-import org.spring.framework.core.Scope;
 import org.spring.framework.core.aop.InterceptorFactory;
-import org.spring.framework.core.bean.FactoryBean;
+import org.spring.framework.core.bean.BeanDefinitionParser;
+import org.spring.framework.core.bean.ImportClassImporter;
 import org.spring.framework.core.util.EscapeUtil;
 
 import java.io.File;
@@ -36,11 +35,16 @@ public class BeanDefinitionReader {
 
     public void register(Class<?>... configClass){
         for (final Class<?> aClass : configClass) {
-            doRegisterBean(aClass);
+            scan(aClass);
+            doRegisterBean();
         }
     }
 
-    private void doRegisterBean(Class<?> configClass){
+    private void scan(Class<?> configClass){
+
+        String configPackage = configClass.getPackage().getName();
+        doScan(configPackage);
+
         if (configClass.isAnnotationPresent(ComponentScan.class)) {
 
             ComponentScan componentScan = configClass.getAnnotation(ComponentScan.class);
@@ -49,42 +53,38 @@ public class BeanDefinitionReader {
             InterceptorFactory.loadInterceptors(basePackages);
 
             for (final String basePackage : basePackages) {
-                try {
-                    String abstractPath = basePackage.replace(".", "/");
-                    URI uri = classLoader.getResource(abstractPath).toURI();
-
-                    File file = new File(uri);
-                    if (file.isDirectory()){
-                        scanDirectory(file);
-                    }
-                } catch (URISyntaxException ex){
-                    ex.printStackTrace();
-                }
+                doScan(basePackage);
             }
+        }
+    }
 
-            for (final Map.Entry<String, Class> entry : beanClassMap.entrySet()) {
+    private void doScan(String basePackage){
 
-                String beanName = entry.getKey();
-                Class beanClass = entry.getValue();
+        // 扫描Interceptor
+        ImportClassImporter.importClass(basePackage);
 
-                BeanDefinition bd = new BeanDefinition();
+        // 扫描其他bean
+        try {
+            String abstractPath = basePackage.replace(".", "/");
+            URI uri = classLoader.getResource(abstractPath).toURI();
 
-                if (beanClass.isAnnotationPresent(Scope.class)) {
-                    Scope scope = (Scope) beanClass.getAnnotation(Scope.class);
-                    bd.setScope(scope.value());
-                }
-
-                bd.setBeanClass(beanClass);
-                bd.setIsLazyInit(beanClass.isAnnotationPresent(Lazy.class));
-
-                // 是否是工厂bean
-                if (FactoryBean.class.isAssignableFrom(beanClass)) {
-                    bd.setIsFactoryBean(true);
-                }
-
-                log.debug("register bean: {}", beanClass.getName());
-                BeanDefinitionHolder.put(beanName, bd);
+            File file = new File(uri);
+            if (file.isDirectory()){
+                scanDirectory(file);
             }
+        } catch (URISyntaxException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    private void doRegisterBean(){
+        for (final Map.Entry<String, Class> entry : beanClassMap.entrySet()) {
+
+            String beanName = entry.getKey();
+            Class beanClass = entry.getValue();
+
+            BeanDefinition bd = BeanDefinitionParser.parse(beanClass);
+            BeanDefinitionHolder.put(beanName, bd);
         }
     }
 

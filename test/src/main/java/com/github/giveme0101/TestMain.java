@@ -1,8 +1,10 @@
 package com.github.giveme0101;
 
+import com.github.convert.BeanConverter;
 import com.github.giveme0101.entity.Order;
 import com.github.giveme0101.service.IOrderService;
 import org.spring.framework.core.ComponentScan;
+import org.spring.framework.core.Import;
 import org.spring.framework.core.context.AnnotationConfigApplicationContext;
 import org.spring.framework.core.context.ApplicationContext;
 
@@ -20,6 +22,7 @@ import java.util.List;
         "com.github.giveme0101.dao",
         "com.github.giveme0101.service"
 })
+@Import(BeanConverter.class)
 public class TestMain {
 
     public static void main(String[] args) {

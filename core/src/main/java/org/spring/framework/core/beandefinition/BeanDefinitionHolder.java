@@ -1,6 +1,7 @@
 package org.spring.framework.core.beandefinition;
 
-import org.spring.framework.core.util.BeanUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.spring.framework.core.util.BeanNameUtil;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @name BeanDefinitionHolder
  * @Date 2020/09/17 9:30
  */
+@Slf4j
 public class BeanDefinitionHolder {
 
     private static Map<String, BeanDefinition> beanDefinitionMap = new LinkedHashMap<>();
@@ -21,12 +23,13 @@ public class BeanDefinitionHolder {
     }
 
     public static void put(BeanDefinition beanDefinition){
-        put(BeanUtil.getBeanName(beanDefinition), beanDefinition);
+        put(BeanNameUtil.getBeanName(beanDefinition), beanDefinition);
     }
 
     public static void put(String beanName, BeanDefinition beanDefinition){
 
         beanDefinitionMap.put(beanName, beanDefinition);
+        log.debug("register bean: {}", beanName);
 
         Class<?> beanClass = beanDefinition.getBeanClass();
         beanClassDefinitionMap.computeIfAbsent(beanClass, bd -> new HashSet<>()).add(beanDefinition);

@@ -32,7 +32,11 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public Order getOrderInfo(String orderCode) {
         OrderDO orderDO = orderMapper.get(orderCode);
-        return orderDO == null ? null : orderConverter.convertToBO(orderDO);
+        if (null == orderDO){
+            return null;
+        }
+
+        return orderConverter.convertToBO(orderDO);
     }
 
     @Override

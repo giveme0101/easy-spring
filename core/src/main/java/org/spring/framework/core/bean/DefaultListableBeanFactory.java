@@ -7,7 +7,7 @@ import org.spring.framework.core.beandefinition.BeanDefinitionHolder;
 import org.spring.framework.core.config.BeanPostProcessor;
 import org.spring.framework.core.config.InitializingBean;
 import org.spring.framework.core.config.InstantiationAwareBeanPostProcessor;
-import org.spring.framework.core.util.BeanUtil;
+import org.spring.framework.core.util.BeanNameUtil;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -57,7 +57,7 @@ public class DefaultListableBeanFactory implements BeanFactory {
             return null;
         }
 
-        String beanName = BeanUtil.getBeanName(beanDefinition);
+        String beanName = BeanNameUtil.getBeanName(beanDefinition);
         return (T) getBean(beanName);
     }
 
@@ -68,7 +68,7 @@ public class DefaultListableBeanFactory implements BeanFactory {
         Map<String, T> resultMap = new HashMap<>(beansOfType.size());
 
         for (final BeanDefinition bd : beansOfType) {
-            String beanName = BeanUtil.getBeanName(bd);
+            String beanName = BeanNameUtil.getBeanName(bd);
             Object bean = getBean(beanName);
             resultMap.put(beanName, (T) bean);
         }
@@ -105,7 +105,7 @@ public class DefaultListableBeanFactory implements BeanFactory {
             Type type = Arrays.stream(factoryBeanClass.getGenericInterfaces()).filter(i -> FactoryBean.class.isAssignableFrom(factoryBeanClass))
                     .findFirst().get();
             Class productBeanClass = (Class)((ParameterizedType) type).getActualTypeArguments()[0];
-            String productBeanName = BeanUtil.getBeanName(bd);
+            String productBeanName = BeanNameUtil.getBeanName(bd);
 
             // 创建工厂bean
             String factoryBeanName = FactoryBean.BEAN_NAME_PREFIX + productBeanName;
@@ -200,13 +200,13 @@ public class DefaultListableBeanFactory implements BeanFactory {
         InstantiationAwareBeanPostProcessor autowiredAnnotationBeanPostProcessor = (AutowiredAnnotationBeanPostProcessor) singletonObjects.get("autowiredAnnotationBeanPostProcessor");
         if (null != autowiredAnnotationBeanPostProcessor) {
             BeanDefinition beanDefinition = BeanDefinitionHolder.get(beanClass);
-            autowiredAnnotationBeanPostProcessor.postProcessProperties(bean, BeanUtil.getBeanName(beanDefinition));
+            autowiredAnnotationBeanPostProcessor.postProcessProperties(bean, BeanNameUtil.getBeanName(beanDefinition));
         }
 
         InstantiationAwareBeanPostProcessor valueAnnotationBeanPostProcessor = (ValueAnnotationBeanPostProcessor) singletonObjects.get("valueAnnotationBeanPostProcessor");
         if (null != valueAnnotationBeanPostProcessor) {
             BeanDefinition beanDefinition = BeanDefinitionHolder.get(beanClass);
-            valueAnnotationBeanPostProcessor.postProcessProperties(bean, BeanUtil.getBeanName(beanDefinition));
+            valueAnnotationBeanPostProcessor.postProcessProperties(bean, BeanNameUtil.getBeanName(beanDefinition));
         }
 
     }

@@ -1,9 +1,11 @@
 package com.github.giveme0101.converter;
 
+import com.github.convert.BeanConverter;
 import com.github.giveme0101.config.jdbc.ResultSetConverter;
 import com.github.giveme0101.entity.Order;
 import com.github.giveme0101.entity.OrderDO;
 import com.github.giveme0101.entity.OrderStatusEnum;
+import org.spring.framework.core.Autowired;
 import org.spring.framework.core.Component;
 
 import java.sql.ResultSet;
@@ -16,7 +18,10 @@ import java.sql.SQLException;
  * @Date 2020/10/15 14:14
  */
 @Component
-public class OrderConverter implements ResultSetConverter<OrderDO>, Converter<Order, OrderDO> {
+public class OrderConverter implements ResultSetConverter<OrderDO>, TwoWayConverter<Order, OrderDO> {
+
+    @Autowired
+    private BeanConverter beanConverter;
 
     @Override
     public OrderDO mapToDO(ResultSet rs) throws SQLException {
@@ -33,14 +38,11 @@ public class OrderConverter implements ResultSetConverter<OrderDO>, Converter<Or
 
     @Override
     public Order convertToBO(OrderDO orderDO) {
-        return Order.builder()
-                .orderNo(orderDO.getOrderNo())
-                .buyerId(orderDO.getBuyerId())
-                .sellerId(orderDO.getSellerId())
-                .amount(orderDO.getAmount())
+        Order order = Order.builder()
                 .status(OrderStatusEnum.of(orderDO.getStatus()))
-                .createTime(orderDO.getCreateTime())
                 .build();
+        beanConverter.convert(orderDO, order);
+        return order;
     }
 
     @Override

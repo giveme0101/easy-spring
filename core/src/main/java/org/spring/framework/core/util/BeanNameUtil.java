@@ -13,7 +13,7 @@ import java.util.Arrays;
  * @name BeanNameUtil
  * @Date 2020/10/13 14:59
  */
-public class BeanUtil {
+public class BeanNameUtil {
 
     public static String getBeanName(BeanDefinition bd){
 

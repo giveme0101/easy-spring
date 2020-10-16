@@ -4,6 +4,7 @@ import org.spring.framework.core.bean.BeanFactory;
 import org.spring.framework.core.config.CommandLineRunner;
 import org.spring.framework.core.event.Event;
 import org.spring.framework.core.event.EventListener;
+import org.spring.framework.core.util.ContextLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +26,7 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
     protected final Properties properties;
 
     public AbstractApplicationContext() {
+        ContextLoader.put(this);
         try {
             properties = this.getProperties(defaultPropertiesLocation);
         } catch (IOException ex){
