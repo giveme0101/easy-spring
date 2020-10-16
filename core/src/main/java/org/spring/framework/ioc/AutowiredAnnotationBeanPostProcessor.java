@@ -1,9 +1,10 @@
-package org.spring.framework.core.bean;
+package org.spring.framework.ioc;
 
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.annotation.Autowired;
 import org.spring.framework.core.aware.BeanFactoryAware;
 import org.spring.framework.core.InstantiationAwareBeanPostProcessor;
+import org.spring.framework.core.bean.BeanFactory;
 import org.spring.framework.core.util.ContextLoader;
 import org.spring.framework.core.util.EscapeUtil;
 

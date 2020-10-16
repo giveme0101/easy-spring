@@ -8,6 +8,8 @@ import org.spring.framework.core.BeanPostProcessor;
 import org.spring.framework.core.InitializingBean;
 import org.spring.framework.core.InstantiationAwareBeanPostProcessor;
 import org.spring.framework.core.util.BeanNameUtil;
+import org.spring.framework.ioc.AutowiredAnnotationBeanPostProcessor;
+import org.spring.framework.ioc.ValueAnnotationBeanPostProcessor;
 
 import java.lang.reflect.*;
 import java.util.*;

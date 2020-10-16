@@ -1,4 +1,4 @@
-package org.spring.framework.core.bean;
+package org.spring.framework.ioc;
 
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.annotation.Value;
