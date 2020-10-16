@@ -11,7 +11,7 @@ A sample IOC framework like spring, ^^
 * [x] @Value -> ValueAnnotationBeanPostProcessor -> InstantiationAwareBeanPostProcessor -> BeanPostProcessor
 * [x] FactoryBean(getObject(), getObjectType())
 * [x] InitializingBean
-* [x] [AOP] (#AOP)
+* [x] [AOP](#AOP)
 * [ ] 拦截器 Interception 无法被Spring管理
 * [x] 构造器注入(不支持list、map、array等复合类型)
 * [x] BeanNameAware
