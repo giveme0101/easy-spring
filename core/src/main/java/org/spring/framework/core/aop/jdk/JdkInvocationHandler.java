@@ -17,21 +17,15 @@ public final class JdkInvocationHandler implements InvocationHandler {
         this.interceptor = interceptor;
     }
 
-    public static Object wrap(Object target, Interceptor interceptor){
-        return wrap(target.getClass().getClassLoader(), target, interceptor);
+    public static Object wrap(Object target, Class targetInterface, Interceptor interceptor){
+        return wrap(target.getClass().getClassLoader(), target, targetInterface, interceptor);
     }
 
-    public static Object wrap(ClassLoader classLoader, Object target, Interceptor interceptor) {
-
-        Class<?>[] interfaces = target.getClass().getInterfaces();
-        if (null == interfaces || interfaces.length < 1){
-            return target;
-        }
-
+    public static Object wrap(ClassLoader classLoader, Object target, Class targetInterface, Interceptor interceptor) {
         JdkInvocationHandler jdkInvocationHandler = new JdkInvocationHandler(target, interceptor);
         return Proxy.newProxyInstance(
                 classLoader,
-                interfaces,
+                new Class[]{targetInterface},
                 jdkInvocationHandler
         );
     }

@@ -19,11 +19,11 @@ public class JdkAopProxy implements AopProxy {
 
     @Override
     public Object getProxy() {
-        return JdkInvocationHandler.wrap(support.getTarget(), support.getInterceptor());
+        return JdkInvocationHandler.wrap(support.getTarget(), support.getTargetClass(), support.getInterceptor());
     }
 
     @Override
     public Object getProxy(ClassLoader classLoader) {
-        return JdkInvocationHandler.wrap(classLoader, support.getTarget(), support.getInterceptor());
+        return JdkInvocationHandler.wrap(classLoader, support.getTarget(), support.getTargetClass(), support.getInterceptor());
     }
 }

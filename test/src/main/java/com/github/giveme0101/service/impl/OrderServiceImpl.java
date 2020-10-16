@@ -1,7 +1,7 @@
 package com.github.giveme0101.service.impl;
 
 import com.github.giveme0101.converter.OrderConverter;
-import com.github.giveme0101.dao.IOrderMapper;
+import com.github.giveme0101.dao.impl.OrderMapper;
 import com.github.giveme0101.entity.Order;
 import com.github.giveme0101.entity.OrderDO;
 import com.github.giveme0101.entity.OrderStatusEnum;
@@ -24,8 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements IOrderService {
 
-    // FIXME 此处如果是IOrderMapper的实现类会报错
-    private final IOrderMapper orderMapper;
+    private final OrderMapper orderMapper;
     private final OrderConverter orderConverter;
 
     @Override
