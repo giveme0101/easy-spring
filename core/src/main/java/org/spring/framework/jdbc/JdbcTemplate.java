@@ -13,4 +13,5 @@ public interface JdbcTemplate {
     int update(String sql, Object[] args);
 
     int delete(String sql, Object[] args);
+
 }

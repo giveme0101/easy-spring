@@ -52,7 +52,7 @@ public class OrderConverter implements ResultSetConverter<OrderDO>, TwoWayConver
                 .buyerId(order.getBuyerId())
                 .sellerId(order.getSellerId())
                 .amount(order.getAmount())
-                .status(order.getStatus().getStatus())
+                .status(null == order.getStatus() ? null : order.getStatus().getStatus())
                 .createTime(order.getCreateTime())
                 .build();
     }

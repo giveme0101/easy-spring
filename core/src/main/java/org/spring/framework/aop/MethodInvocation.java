@@ -24,7 +24,11 @@ public class MethodInvocation {
         Object result;
         try {
 
-            // TODO Object的方法不代理
+            String methodName = targetMethod.getName();
+
+            if ("toString".equals(methodName)){
+                return targetObject.toString();
+            }
 
             result = targetMethod.invoke(targetObject, args);
             log.info("invoke target method successfully ,result is: [{}]", result);

@@ -14,4 +14,5 @@ public abstract class Interceptor {
     public abstract Class getTargetClass();
 
     public abstract Object intercept(MethodInvocation methodInvocation);
+
 }

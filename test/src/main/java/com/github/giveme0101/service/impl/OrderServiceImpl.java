@@ -9,6 +9,7 @@ import com.github.giveme0101.service.IOrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.annotation.Service;
+import org.spring.framework.jdbc.tm.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,9 +47,19 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
+    @Transactional
     public void save(Order order) {
-        OrderDO orderDO = orderConverter.convertToDO(order);
-        orderMapper.insert(orderDO);
+
+        OrderDO orderInfo = orderMapper.get(order.getOrderNo());
+        if (null == orderInfo){
+            OrderDO orderDO = orderConverter.convertToDO(order);
+            orderMapper.insert(orderDO);
+        }
+
+//        if (1==1){
+//            throw new NullPointerException("事务回退");
+//        }
+
     }
 
     @Override

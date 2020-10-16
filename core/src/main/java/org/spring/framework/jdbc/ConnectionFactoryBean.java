@@ -11,7 +11,7 @@ import org.spring.framework.core.bean.FactoryBean;
  * @Date 2020/10/13 17:03
  */
 @Slf4j
-public class ConnectionFactoryBean implements FactoryBean<ConnectionFactory> {
+public class ConnectionFactoryBean implements FactoryBean<PooledConnectionFactory> {
 
     @Value("datasource.driverClassName")
     private String driverClassName;
@@ -23,13 +23,13 @@ public class ConnectionFactoryBean implements FactoryBean<ConnectionFactory> {
     private String password;
 
     @Override
-    public ConnectionFactory getObject() {
-        return new JdbcConnectionFactory(driverClassName, url, userName, password);
+    public PooledConnectionFactory getObject() {
+        return new ProxyConnectionFactory(driverClassName, url, userName, password);
     }
 
     @Override
-    public Class<ConnectionFactory> getObjectType() {
-        return ConnectionFactory.class;
+    public Class<PooledConnectionFactory> getObjectType() {
+        return PooledConnectionFactory.class;
     }
 
 }

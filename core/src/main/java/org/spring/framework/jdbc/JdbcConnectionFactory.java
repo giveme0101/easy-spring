@@ -1,5 +1,7 @@
 package org.spring.framework.jdbc;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -9,6 +11,7 @@ import java.sql.DriverManager;
  * @name JdbcConnectionFactory
  * @Date 2020/10/14 11:12
  */
+@Slf4j
 public class JdbcConnectionFactory implements ConnectionFactory {
 
     private final String driverClassName;
@@ -31,11 +34,22 @@ public class JdbcConnectionFactory implements ConnectionFactory {
     }
 
     @Override
-    public Connection getConnection() {
+    public Connection openConnection() {
         try {
             return DriverManager.getConnection(url, username, password);
         } catch (Exception exception) {
             throw new RuntimeException(exception);
+        }
+    }
+
+    @Override
+    public void closeConnection(Connection conn) {
+        try {
+            if (null != conn && !conn.isClosed()) {
+                conn.close();
+            }
+        } catch (Exception ex){
+            log.warn(ex.getMessage(), ex);
         }
     }
 }

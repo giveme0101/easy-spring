@@ -10,6 +10,8 @@ import java.sql.Connection;
  */
 public interface ConnectionFactory {
 
-    Connection getConnection();
+    Connection openConnection();
+
+    void closeConnection(Connection conn);
 
 }

@@ -1,13 +1,15 @@
 package org.spring.framework.core.config;
 
 import org.spring.framework.aop.AopProxyBeanPostProcessor;
-import org.spring.framework.ioc.AutowiredAnnotationBeanPostProcessor;
-import org.spring.framework.core.bean.BeanDefinitionParser;
-import org.spring.framework.ioc.ValueAnnotationBeanPostProcessor;
 import org.spring.framework.core.bd.BeanDefinition;
+import org.spring.framework.core.bean.BeanDefinitionParser;
 import org.spring.framework.core.event.EventBeanPostProcessor;
+import org.spring.framework.ioc.AutowiredAnnotationBeanPostProcessor;
+import org.spring.framework.ioc.ValueAnnotationBeanPostProcessor;
 import org.spring.framework.jdbc.ConnectionFactoryBean;
 import org.spring.framework.jdbc.JdbcTemplateImpl;
+import org.spring.framework.jdbc.tm.TransactionManager;
+import org.spring.framework.jdbc.tm.TransactionalAnnotationBeanPostProcessor;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +33,8 @@ public class AnnotationConfigLoader {
 
             add(BeanDefinitionParser.parse(ConnectionFactoryBean.class));
             add(BeanDefinitionParser.parse(JdbcTemplateImpl.class));
+            add(BeanDefinitionParser.parse(TransactionManager.class));
+            add(BeanDefinitionParser.parse(TransactionalAnnotationBeanPostProcessor.class));
 
         }};
     }

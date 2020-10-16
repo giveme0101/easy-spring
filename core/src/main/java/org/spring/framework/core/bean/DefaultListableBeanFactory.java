@@ -1,6 +1,7 @@
 package org.spring.framework.core.bean;
 
 import lombok.extern.slf4j.Slf4j;
+import org.spring.framework.core.annotation.Order;
 import org.spring.framework.core.aware.BeanNameAware;
 import org.spring.framework.core.bd.BeanDefinition;
 import org.spring.framework.core.bd.BeanDefinitionHolder;
@@ -14,6 +15,7 @@ import org.spring.framework.ioc.ValueAnnotationBeanPostProcessor;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
@@ -231,11 +233,31 @@ public class DefaultListableBeanFactory implements BeanFactory {
     private Object beanPostAfterInitialization(Object bean, String beanName) {
 
         Object postBean = bean;
-        for (final Object object : singletonObjects.values()) {
-            if (object instanceof BeanPostProcessor){
-                BeanPostProcessor postProcessor = (BeanPostProcessor) object;
+
+        Collection<BeanPostProcessor> values = singletonObjects.values().stream()
+                .filter(o -> o instanceof BeanPostProcessor)
+                .map(BeanPostProcessor.class::cast)
+                .sorted((a, b) -> {
+
+                    int ao = 0, bo = 0;
+
+                    Order aa = a.getClass().getAnnotation(Order.class);
+                    Order ba = b.getClass().getAnnotation(Order.class);
+
+                    if (aa != null){
+                        ao = aa.value();
+                    }
+
+                    if (ba != null){
+                        bo = ba.value();
+                    }
+
+                    return bo - ao;
+                })
+                .collect(Collectors.toList());
+
+        for (final BeanPostProcessor postProcessor : values ) {
                 postBean = postProcessor.postProcessAfterInitialization(postBean, beanName);
-            }
         }
 
         return postBean;

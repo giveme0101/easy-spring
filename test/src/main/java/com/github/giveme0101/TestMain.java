@@ -8,7 +8,7 @@ import org.spring.framework.core.annotation.Import;
 import org.spring.framework.core.context.AnnotationConfigApplicationContext;
 import org.spring.framework.core.context.ApplicationContext;
 
-import java.util.List;
+import java.util.Date;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
@@ -30,13 +30,24 @@ public class TestMain {
         ApplicationContext context = new AnnotationConfigApplicationContext(TestMain.class);
 
         IOrderService orderService = context.getBean(IOrderService.class);
-        Order orderInfo = orderService.getOrderInfo("O-00001");
-        System.out.println(orderInfo);
 
-        orderService.payOrder(orderInfo.getOrderNo());
+        String orderNo = "O-000017";
 
-        List<Order> orderList = orderService.getOrderList();
-        orderList.stream().forEach(System.out::println);
+        orderService.save(Order.builder()
+                .orderNo(orderNo)
+                .buyerId("buyer")
+                .sellerId("seller")
+                .amount(100.00)
+                .createTime(new Date())
+                .build());
+
+//        Order orderInfo = orderService.getOrderInfo(orderNo);
+//        System.out.println(orderInfo);
+//
+//        orderService.payOrder(orderInfo.getOrderNo());
+//
+//        List<Order> orderList = orderService.getOrderList();
+//        orderList.stream().forEach(System.out::println);
 
     }
 

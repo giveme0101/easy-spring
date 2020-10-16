@@ -34,7 +34,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
 
         try {
 
-            conn = connectionFactory.getConnection();
+            conn = connectionFactory.openConnection();
             pstmt = conn.prepareStatement(sql);
             if (null != args && args.length > 0){
                 for (int i = 0; i < args.length; i++) {
@@ -54,9 +54,9 @@ public class JdbcTemplateImpl implements JdbcTemplate {
             throw new RuntimeException(ex);
         } finally {
             try {
+                connectionFactory.closeConnection(conn);
                 if (null != rs && !rs.isClosed()) rs.close();
                 if (null != pstmt && !pstmt.isClosed()) pstmt.close();
-                if (null != conn && !conn.isClosed()) conn.close();
             } catch (Exception ex) {}
         }
     }
@@ -82,7 +82,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         PreparedStatement pstmt = null;
 
         try {
-            conn = connectionFactory.getConnection();
+            conn = connectionFactory.openConnection();
             pstmt = conn.prepareStatement(sql);
             if (null != args && args.length > 0){
                 for (int i = 0; i < args.length; i++) {
@@ -95,8 +95,8 @@ public class JdbcTemplateImpl implements JdbcTemplate {
             throw new RuntimeException(ex);
         } finally {
             try {
+                connectionFactory.closeConnection(conn);
                 if (null != pstmt && !pstmt.isClosed()) pstmt.close();
-                if (null != conn && !conn.isClosed()) conn.close();
             } catch (Exception ex) {}
         }
     }
