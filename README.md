@@ -29,3 +29,4 @@ A sample IOC framework like spring, ^^
 * [ ] 循环依赖
 * [ ] Interceptor代理接口， @Autowire/构造器注入 接口的实现报错！
 * [x] @Import (引入外部Bean)
+* [ ] SPI

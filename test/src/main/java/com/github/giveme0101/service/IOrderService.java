@@ -18,8 +18,8 @@ public interface IOrderService {
 
     void save(Order order);
 
-    void remove(String orderCode);
+    void delete(String orderCode);
 
-    void setPayed(String orderCode);
+    void payOrder(String orderCode);
 
 }

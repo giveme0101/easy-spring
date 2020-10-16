@@ -52,12 +52,12 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public void remove(String orderCode) {
+    public void delete(String orderCode) {
         orderMapper.remove(orderCode);
     }
 
     @Override
-    public void setPayed(String orderCode) {
+    public void payOrder(String orderCode) {
         orderMapper.setStatus(OrderStatusEnum.PAYED, orderCode);
     }
 
