@@ -1,7 +1,6 @@
-package com.github.giveme0101.config.jdbc;
+package org.spring.framework.jdbc;
 
 import lombok.extern.slf4j.Slf4j;
-import org.spring.framework.core.Component;
 import org.spring.framework.core.Value;
 import org.spring.framework.core.bean.FactoryBean;
 
@@ -12,7 +11,6 @@ import org.spring.framework.core.bean.FactoryBean;
  * @Date 2020/10/13 17:03
  */
 @Slf4j
-@Component
 public class ConnectionFactoryBean implements FactoryBean<ConnectionFactory> {
 
     @Value("datasource.driverClassName")
@@ -26,7 +24,7 @@ public class ConnectionFactoryBean implements FactoryBean<ConnectionFactory> {
 
     @Override
     public ConnectionFactory getObject() {
-        return new ConnectionFactoryImpl(driverClassName, url, userName, password);
+        return new JdbcConnectionFactory(driverClassName, url, userName, password);
     }
 
     @Override

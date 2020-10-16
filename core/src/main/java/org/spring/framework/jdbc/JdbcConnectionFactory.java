@@ -1,4 +1,4 @@
-package com.github.giveme0101.config.jdbc;
+package org.spring.framework.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,10 +6,10 @@ import java.sql.DriverManager;
 /**
  * @Author kevin xiajun94@FoxMail.com
  * @Description
- * @name ConnectionFactory
+ * @name JdbcConnectionFactory
  * @Date 2020/10/14 11:12
  */
-public class ConnectionFactoryImpl implements ConnectionFactory {
+public class JdbcConnectionFactory implements ConnectionFactory {
 
     private final String driverClassName;
     private final String url;
@@ -17,7 +17,7 @@ public class ConnectionFactoryImpl implements ConnectionFactory {
     private final String password;
 
 
-    public ConnectionFactoryImpl(String driverClassName, String url, String username, String password) {
+    public JdbcConnectionFactory(String driverClassName, String url, String username, String password) {
         this.driverClassName = driverClassName;
         this.url = url;
         this.username = username;

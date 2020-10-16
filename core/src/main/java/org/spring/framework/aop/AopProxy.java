@@ -1,4 +1,4 @@
-package org.spring.framework.core.aop;
+package org.spring.framework.aop;
 
 /**
  * @Author kevin xiajun94@FoxMail.com

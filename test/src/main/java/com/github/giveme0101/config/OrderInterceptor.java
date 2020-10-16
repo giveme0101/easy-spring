@@ -3,8 +3,8 @@ package com.github.giveme0101.config;
 
 import com.github.giveme0101.dao.IOrderMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.spring.framework.core.aop.Interceptor;
-import org.spring.framework.core.aop.MethodInvocation;
+import org.spring.framework.aop.Interceptor;
+import org.spring.framework.aop.MethodInvocation;
 
 @Slf4j
 public class OrderInterceptor extends Interceptor {

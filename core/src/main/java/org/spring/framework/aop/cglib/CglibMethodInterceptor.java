@@ -1,10 +1,10 @@
-package org.spring.framework.core.aop.cglib;
+package org.spring.framework.aop.cglib;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
-import org.spring.framework.core.aop.Interceptor;
-import org.spring.framework.core.aop.MethodInvocation;
+import org.spring.framework.aop.Interceptor;
+import org.spring.framework.aop.MethodInvocation;
 import org.spring.framework.core.context.ApplicationContext;
 import org.spring.framework.core.util.ContextLoader;
 

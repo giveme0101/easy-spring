@@ -16,17 +16,17 @@ import java.util.Arrays;
 public class BeanNameUtil {
 
     public static String getBeanName(BeanDefinition bd){
-
-        if (bd.getIsFactoryBean()){
-            Class beanClass = bd.getBeanClass();
-            Type type = Arrays.stream(beanClass.getGenericInterfaces()).filter(i -> FactoryBean.class.isAssignableFrom(beanClass))
-                    .findFirst().get();
-            Class actualTypeArguments = (Class)((ParameterizedType) type).getActualTypeArguments()[0];
-
-            return EscapeUtil.firstCharLowerCase(actualTypeArguments.getSimpleName());
-        }
-
         return EscapeUtil.firstCharLowerCase(bd.getBeanClass().getSimpleName());
+    }
+
+    public static String getFactoryBeanProductBeanName(BeanDefinition bd){
+
+        Class beanClass = bd.getBeanClass();
+        Type type = Arrays.stream(beanClass.getGenericInterfaces()).filter(i -> FactoryBean.class.isAssignableFrom(beanClass))
+                .findFirst().get();
+        Class actualTypeArguments = (Class)((ParameterizedType) type).getActualTypeArguments()[0];
+
+        return EscapeUtil.firstCharLowerCase(actualTypeArguments.getSimpleName());
     }
 
 }

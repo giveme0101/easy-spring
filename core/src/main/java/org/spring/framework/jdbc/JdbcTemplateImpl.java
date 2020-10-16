@@ -1,7 +1,6 @@
-package com.github.giveme0101.config.jdbc;
+package org.spring.framework.jdbc;
 
 import lombok.AllArgsConstructor;
-import org.spring.framework.core.Component;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,7 +14,6 @@ import java.util.List;
  * @name JdbcTemplateImpl
  * @Date 2020/10/14 11:17
  */
-@Component
 @AllArgsConstructor
 public class JdbcTemplateImpl implements JdbcTemplate {
 
@@ -35,6 +33,7 @@ public class JdbcTemplateImpl implements JdbcTemplate {
         ResultSet rs = null;
 
         try {
+
             conn = connectionFactory.getConnection();
             pstmt = conn.prepareStatement(sql);
             if (null != args && args.length > 0){
@@ -90,7 +89,8 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                     pstmt.setObject(i + 1, args[i]);
                 }
             }
-            return pstmt.executeUpdate();
+            int effectRows = pstmt.executeUpdate();
+            return effectRows;
         } catch (Exception ex){
             throw new RuntimeException(ex);
         } finally {

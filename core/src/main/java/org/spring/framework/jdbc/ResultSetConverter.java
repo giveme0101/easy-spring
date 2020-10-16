@@ -1,4 +1,4 @@
-package com.github.giveme0101.config.jdbc;
+package org.spring.framework.jdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

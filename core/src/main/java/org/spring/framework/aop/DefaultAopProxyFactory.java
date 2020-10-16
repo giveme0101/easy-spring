@@ -1,7 +1,7 @@
-package org.spring.framework.core.aop;
+package org.spring.framework.aop;
 
-import org.spring.framework.core.aop.cglib.CglibAopProxy;
-import org.spring.framework.core.aop.jdk.JdkAopProxy;
+import org.spring.framework.aop.cglib.CglibAopProxy;
+import org.spring.framework.aop.jdk.JdkAopProxy;
 
 import java.lang.reflect.Proxy;
 

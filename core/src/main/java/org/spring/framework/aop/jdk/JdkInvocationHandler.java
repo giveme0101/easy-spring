@@ -1,7 +1,7 @@
-package org.spring.framework.core.aop.jdk;
+package org.spring.framework.aop.jdk;
 
-import org.spring.framework.core.aop.Interceptor;
-import org.spring.framework.core.aop.MethodInvocation;
+import org.spring.framework.aop.Interceptor;
+import org.spring.framework.aop.MethodInvocation;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

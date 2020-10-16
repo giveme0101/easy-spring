@@ -105,12 +105,13 @@ public class DefaultListableBeanFactory implements BeanFactory {
             Type type = Arrays.stream(factoryBeanClass.getGenericInterfaces()).filter(i -> FactoryBean.class.isAssignableFrom(factoryBeanClass))
                     .findFirst().get();
             Class productBeanClass = (Class)((ParameterizedType) type).getActualTypeArguments()[0];
-            String productBeanName = BeanNameUtil.getBeanName(bd);
+            String productBeanName = BeanNameUtil.getFactoryBeanProductBeanName(bd);
 
             // 创建工厂bean
             String factoryBeanName = FactoryBean.BEAN_NAME_PREFIX + productBeanName;
             FactoryBean factoryBean = (FactoryBean) createBean(factoryBeanName, bd);
             BeanDefinitionHolder.put(factoryBeanName, bd);
+            singletonObjects.put(factoryBeanName, factoryBean);
 
             // 创建工厂bean生产的bean
             BeanDefinition beanDefinition = new BeanDefinition();
@@ -189,7 +190,7 @@ public class DefaultListableBeanFactory implements BeanFactory {
             }
 
             return instance;
-        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+        } catch (IllegalAccessException | InstantiationException | InvocationTargetException | IllegalArgumentException e) {
             e.printStackTrace();
         }
 

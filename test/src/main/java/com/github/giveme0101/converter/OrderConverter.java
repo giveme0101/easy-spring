@@ -1,7 +1,7 @@
 package com.github.giveme0101.converter;
 
 import com.github.convert.BeanConverter;
-import com.github.giveme0101.config.jdbc.ResultSetConverter;
+import org.spring.framework.jdbc.ResultSetConverter;
 import com.github.giveme0101.entity.Order;
 import com.github.giveme0101.entity.OrderDO;
 import com.github.giveme0101.entity.OrderStatusEnum;

@@ -3,7 +3,7 @@ package org.spring.framework.core.beandefinition;
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.Component;
 import org.spring.framework.core.ComponentScan;
-import org.spring.framework.core.aop.InterceptorFactory;
+import org.spring.framework.aop.InterceptorFactory;
 import org.spring.framework.core.bean.BeanDefinitionParser;
 import org.spring.framework.core.bean.ImportClassImporter;
 import org.spring.framework.core.util.EscapeUtil;

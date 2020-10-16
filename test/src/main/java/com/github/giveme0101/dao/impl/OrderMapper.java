@@ -1,6 +1,6 @@
 package com.github.giveme0101.dao.impl;
 
-import com.github.giveme0101.config.jdbc.JdbcTemplate;
+import org.spring.framework.jdbc.JdbcTemplate;
 import com.github.giveme0101.converter.OrderConverter;
 import com.github.giveme0101.dao.IOrderMapper;
 import com.github.giveme0101.entity.OrderDO;

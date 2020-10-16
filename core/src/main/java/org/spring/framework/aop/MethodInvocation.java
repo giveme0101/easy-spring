@@ -1,4 +1,4 @@
-package org.spring.framework.core.aop;
+package org.spring.framework.aop;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

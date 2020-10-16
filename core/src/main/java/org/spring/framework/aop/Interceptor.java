@@ -1,4 +1,4 @@
-package org.spring.framework.core.aop;
+package org.spring.framework.aop;
 
 /**
  * @author tom & shuang.kou

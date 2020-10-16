@@ -1,7 +1,7 @@
-package org.spring.framework.core.aop.cglib;
+package org.spring.framework.aop.cglib;
 
-import org.spring.framework.core.aop.AdvisedSupport;
-import org.spring.framework.core.aop.AopProxy;
+import org.spring.framework.aop.AdvisedSupport;
+import org.spring.framework.aop.AopProxy;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
