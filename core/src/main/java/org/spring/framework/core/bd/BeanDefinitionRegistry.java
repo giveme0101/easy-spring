@@ -5,21 +5,22 @@ import org.spring.framework.core.util.BeanNameUtil;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
  * @Description
- * @name BeanDefinitionHolder
+ * @name BeanDefinitionRegistry
  * @Date 2020/09/17 9:30
  */
 @Slf4j
-public class BeanDefinitionHolder {
+public class BeanDefinitionRegistry {
 
     private static Map<String, BeanDefinition> beanDefinitionMap = new LinkedHashMap<>();
-    private static Map<Class, Set<BeanDefinition>> beanClassDefinitionMap = new ConcurrentHashMap<>();
+    private static final Map<Class, Set<String>> allBeanNamesByType = new ConcurrentHashMap<>(64);
 
     public static void putAll(Set<BeanDefinition> beanDefinitionSet) {
-        beanDefinitionSet.forEach(BeanDefinitionHolder::put);
+        beanDefinitionSet.forEach(BeanDefinitionRegistry::put);
     }
 
     public static void put(BeanDefinition beanDefinition){
@@ -32,10 +33,10 @@ public class BeanDefinitionHolder {
         log.debug("register bean: {}", beanName);
 
         Class<?> beanClass = beanDefinition.getBeanClass();
-        beanClassDefinitionMap.computeIfAbsent(beanClass, bd -> new HashSet<>()).add(beanDefinition);
+        allBeanNamesByType.computeIfAbsent(beanClass, bd -> new HashSet<>()).add(beanName);
         Class<?>[] interfaces = beanClass.getInterfaces();
         for (final Class<?> anInterface : interfaces) {
-            beanClassDefinitionMap.computeIfAbsent(anInterface, bd -> new HashSet<>()).add(beanDefinition);
+            allBeanNamesByType.computeIfAbsent(anInterface, bd -> new HashSet<>()).add(beanName);
         }
     }
 
@@ -57,10 +58,12 @@ public class BeanDefinitionHolder {
     }
 
     public static Collection<BeanDefinition> getBeansOfType(Class clazz){
-       return beanClassDefinitionMap.get(clazz);
+        Set<String> beanNameOfTypes = allBeanNamesByType.get(clazz);
+        return beanNameOfTypes.stream().map(beanDefinitionMap::get).collect(Collectors.toList());
     }
 
     public static Map<String, BeanDefinition> getBeanDefinitionMap() {
         return new LinkedHashMap<>(beanDefinitionMap);
     }
+
 }

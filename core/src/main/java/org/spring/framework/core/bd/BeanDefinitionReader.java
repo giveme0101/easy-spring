@@ -84,7 +84,7 @@ public class BeanDefinitionReader {
             Class beanClass = entry.getValue();
 
             BeanDefinition bd = BeanDefinitionParser.parse(beanClass);
-            BeanDefinitionHolder.put(beanName, bd);
+            BeanDefinitionRegistry.put(beanName, bd);
         }
     }
 

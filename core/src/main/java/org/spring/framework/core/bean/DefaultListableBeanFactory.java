@@ -10,7 +10,7 @@ import org.spring.framework.core.aware.BeanFactoryAware;
 import org.spring.framework.core.aware.BeanNameAware;
 import org.spring.framework.core.aware.EnvironmentAware;
 import org.spring.framework.core.bd.BeanDefinition;
-import org.spring.framework.core.bd.BeanDefinitionHolder;
+import org.spring.framework.core.bd.BeanDefinitionRegistry;
 import org.spring.framework.core.context.ApplicationContext;
 import org.spring.framework.core.util.BeanNameUtil;
 
@@ -37,7 +37,7 @@ public class DefaultListableBeanFactory implements BeanFactory {
 
     @Override
     public Object getBean(String beanName) {
-        BeanDefinition beanDefinition = BeanDefinitionHolder.get(beanName);
+        BeanDefinition beanDefinition = BeanDefinitionRegistry.get(beanName);
         if (null == beanDefinition){
             return null;
         }
@@ -63,7 +63,7 @@ public class DefaultListableBeanFactory implements BeanFactory {
     @Override
     public <T> T getBean(Class<T> beanClass) {
 
-        BeanDefinition beanDefinition = BeanDefinitionHolder.get(beanClass);
+        BeanDefinition beanDefinition = BeanDefinitionRegistry.get(beanClass);
         if (null == beanDefinition){
             return null;
         }
@@ -75,7 +75,7 @@ public class DefaultListableBeanFactory implements BeanFactory {
     @Override
     public <T> Map<String, T> getBeansOfType(Class<T> beanClass) {
 
-        Collection<BeanDefinition> beansOfType = BeanDefinitionHolder.getBeansOfType(beanClass);
+        Collection<BeanDefinition> beansOfType = BeanDefinitionRegistry.getBeansOfType(beanClass);
         Map<String, T> resultMap = new HashMap<>(beansOfType.size());
 
         for (final BeanDefinition bd : beansOfType) {
@@ -89,7 +89,7 @@ public class DefaultListableBeanFactory implements BeanFactory {
 
     @Override
     public void refresh() {
-        Map<String, BeanDefinition> beanDefinitionMap = BeanDefinitionHolder.getBeanDefinitionMap();
+        Map<String, BeanDefinition> beanDefinitionMap = BeanDefinitionRegistry.getBeanDefinitionMap();
         for (final Map.Entry<String, BeanDefinition> entry : beanDefinitionMap.entrySet()) {
 
             String beanName = entry.getKey();
@@ -121,14 +121,14 @@ public class DefaultListableBeanFactory implements BeanFactory {
             // 创建工厂bean
             String factoryBeanName = FactoryBean.BEAN_NAME_PREFIX + productBeanName;
             FactoryBean factoryBean = (FactoryBean) createBean(factoryBeanName, bd);
-            BeanDefinitionHolder.put(factoryBeanName, bd);
+            BeanDefinitionRegistry.put(factoryBeanName, bd);
             singletonObjects.put(factoryBeanName, factoryBean);
 
             // 创建工厂bean生产的bean
             BeanDefinition beanDefinition = new BeanDefinition();
             beanDefinition.setBeanClass(productBeanClass);
             beanDefinition.setIsSingleton(factoryBean.isSingleton());
-            BeanDefinitionHolder.put(productBeanName, beanDefinition);
+            BeanDefinitionRegistry.put(productBeanName, beanDefinition);
             if (factoryBean.isSingleton()){
                 singletonObjects.put(productBeanName, factoryBean.getObject());
             }
@@ -217,7 +217,7 @@ public class DefaultListableBeanFactory implements BeanFactory {
         if  (!(bean instanceof  InstantiationAwareBeanPostProcessor)) {
             Map<String, InstantiationAwareBeanPostProcessor> beansOfType = this.getBeansOfType(InstantiationAwareBeanPostProcessor.class);
             beansOfType.values().forEach(processor -> {
-                BeanDefinition beanDefinition = BeanDefinitionHolder.get(beanClass);
+                BeanDefinition beanDefinition = BeanDefinitionRegistry.get(beanClass);
                 processor.postProcessProperties(bean, BeanNameUtil.getBeanName(beanDefinition));
             });
         }

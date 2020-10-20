@@ -2,7 +2,7 @@ package org.spring.framework.core.bean;
 
 import org.reflections.Reflections;
 import org.spring.framework.core.annotation.Import;
-import org.spring.framework.core.bd.BeanDefinitionHolder;
+import org.spring.framework.core.bd.BeanDefinitionRegistry;
 
 import java.util.Set;
 
@@ -19,7 +19,7 @@ public class ImportClassImporter {
         Set<Class<?>> importAnnoClassSet = new Reflections(scanPackage).getTypesAnnotatedWith(Import.class);
         for (final Class<?> importAnnoClass : importAnnoClassSet) {
             for (final Class importClass : importAnnoClass.getAnnotation(Import.class).value()) {
-                BeanDefinitionHolder.put(BeanDefinitionParser.parse(importClass));
+                BeanDefinitionRegistry.put(BeanDefinitionParser.parse(importClass));
             }
         }
     }

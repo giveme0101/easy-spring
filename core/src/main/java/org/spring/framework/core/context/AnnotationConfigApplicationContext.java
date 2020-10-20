@@ -2,7 +2,7 @@ package org.spring.framework.core.context;
 
 import org.spring.framework.core.bean.BeanFactory;
 import org.spring.framework.core.bean.DefaultListableBeanFactory;
-import org.spring.framework.core.bd.BeanDefinitionHolder;
+import org.spring.framework.core.bd.BeanDefinitionRegistry;
 import org.spring.framework.core.bd.BeanDefinitionReader;
 import org.spring.framework.core.config.AnnotationConfigLoader;
 
@@ -22,7 +22,7 @@ public class AnnotationConfigApplicationContext extends AbstractApplicationConte
         super();
         beanDefinitionReader = new BeanDefinitionReader();
         this.beanFactory = new DefaultListableBeanFactory(this);
-        BeanDefinitionHolder.putAll(AnnotationConfigLoader.registerAnnotationConfigClass());
+        BeanDefinitionRegistry.putAll(AnnotationConfigLoader.registerAnnotationConfigClass());
         this.beanDefinitionReader.register(configClass);
         this.refresh();
     }
