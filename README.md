@@ -9,10 +9,10 @@ A sample IOC framework like spring, ^^
 * [x] BeanPostProcessor
 * [x] @Autowired -> AutowiredAnnotationBeanPostProcessor -> InstantiationAwareBeanPostProcessor -> BeanPostProcessor
 * [x] @Value -> ValueAnnotationBeanPostProcessor -> InstantiationAwareBeanPostProcessor -> BeanPostProcessor
-* [x] FactoryBean(getObject(), getObjectType())
+* [x] FactoryBean(getObject(), getObjectType()) (getObject()方法产生的bean无法实现bean的生命周期)
 * [x] InitializingBean
 * [x] [AOP](#AOP)
-* [ ] 拦截器 Interception 无法被Spring管理
+* [x] 拦截器 Interception (暂时无法被Spring管理)
 * [x] 构造器注入(不支持list、map、array等复合类型)
 * [x] BeanNameAware
 * [x] BeanFactoryAware
