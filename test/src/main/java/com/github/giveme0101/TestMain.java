@@ -56,6 +56,12 @@ public class TestMain {
         List<Order> orderList = orderService.getOrderList();
         orderList.stream().forEach(System.out::println);
 
+        System.out.println("===========================================================================================================================");
+
+        orderService.delete(orderNo);
+
+        System.out.println("===========================================================================================================================");
+
     }
 
 }

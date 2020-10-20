@@ -19,7 +19,7 @@ public class BannerPrinter {
                 " \\/____/\\/__/\\/_/\\/___/  `/___/> \\                \\/_____/\\ \\ \\/  \\/_/   \\/_/\\/_/\\/_/\\/___L\\ \\\n" +
                 "                            /\\___/                         \\ \\_\\                       /\\____/\n" +
                 "                            \\/__/                           \\/_/                       \\_/__/ \n");
-        System.out.println("version： beta 1.0.0");
+        System.out.println("version： alpha 0.0.1");
         System.out.println();
     }
 
