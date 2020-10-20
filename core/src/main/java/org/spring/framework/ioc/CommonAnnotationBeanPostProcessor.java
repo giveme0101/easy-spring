@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
  * @Description
  *
  * @name CommonAnnotationBeanPostProcessor
- * @Date 2020/10/13 14:04
+ * @Date 2020/10/20 16:02
  */
 @Slf4j
 public class CommonAnnotationBeanPostProcessor implements InstantiationAwareBeanPostProcessor, BeanFactoryAware {
