@@ -53,6 +53,10 @@ public class OrderMapper implements IOrderMapper {
 
     @Override
     public boolean exist(String orderNo) {
+
+//        List<Map<String, Object>> mapList = jdbcTemplate.selectMap("select count(*) as oc from `order` where order_no = ? limit 1 ", new Object[]{orderNo});
+//        return (Long)mapList.get(0).get("oc") > 0;
+
         int count = jdbcTemplate.selectOne("select count(*) as oc from `order` where order_no = ? limit 1 ", new Object[]{orderNo}, rs -> rs.getInt("oc"));
         return count > 0;
     }

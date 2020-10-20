@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
@@ -62,6 +63,40 @@ public class JdbcTemplateImpl implements JdbcTemplate {
     }
 
     @Override
+    public List<Map<String, Object>> selectMap(String sql, Object[] args) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+
+            conn = connectionFactory.openConnection();
+            pstmt = conn.prepareStatement(sql);
+            if (null != args && args.length > 0){
+                for (int i = 0; i < args.length; i++) {
+                    pstmt.setObject(i + 1, args[i]);
+                }
+            }
+
+            rs = pstmt.executeQuery();
+            List<Map<String, Object>> list = new ArrayList<>();
+            while (rs.next()) {
+                list.add(DefaultResultSetConverter.INSTANCE.toMap(rs));
+            }
+
+            return list;
+        } catch (Exception ex){
+            throw new RuntimeException(ex);
+        } finally {
+            try {
+                connectionFactory.closeConnection(conn);
+                if (null != rs && !rs.isClosed()) rs.close();
+                if (null != pstmt && !pstmt.isClosed()) pstmt.close();
+            } catch (Exception ex) {}
+        }
+    }
+
+    @Override
     public int insert(String sql, Object[] args){
         return execute(sql, args);
     }
@@ -99,6 +134,17 @@ public class JdbcTemplateImpl implements JdbcTemplate {
                 if (null != pstmt && !pstmt.isClosed()) pstmt.close();
             } catch (Exception ex) {}
         }
+    }
+
+    public static class DefaultResultSetConverter implements ResultSetConverter {
+
+        public static ResultSetConverter INSTANCE = new DefaultResultSetConverter();
+
+        @Override
+        public Object mapToDO(ResultSet rs) {
+            return null;
+        }
+
     }
 
 }
