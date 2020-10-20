@@ -16,6 +16,7 @@ A sample IOC framework like spring, ^^
 * [x] 构造器注入(不支持list、map、array等复合类型)
 * [x] BeanNameAware
 * [x] BeanFactoryAware
+* [x] EnvironmentAware
 * [x] ApplicationContextAware
 * [ ] DisposableBean bean销毁
 * [x] ApplicationEvent (容器启动完毕事件)
@@ -24,6 +25,7 @@ A sample IOC framework like spring, ^^
 * [ ] Interceptor代理接口， @Autowire/构造器注入 接口的实现报错！
 * [x] @Import (引入外部Bean)
 * [ ] SPI
+* [ ] 封装各种异常
 * [x] @Ordered (仅支持 BeanPostProcessor -> postProcessAfterInitialization() )
 * [x] @Transactional -> TransactionalAnnotationBeanPostProcessor
 

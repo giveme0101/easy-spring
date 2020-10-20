@@ -8,6 +8,7 @@ import org.spring.framework.core.annotation.Ordered;
 import org.spring.framework.core.aware.ApplicationContextAware;
 import org.spring.framework.core.aware.BeanFactoryAware;
 import org.spring.framework.core.aware.BeanNameAware;
+import org.spring.framework.core.aware.EnvironmentAware;
 import org.spring.framework.core.bd.BeanDefinition;
 import org.spring.framework.core.bd.BeanDefinitionHolder;
 import org.spring.framework.core.context.ApplicationContext;
@@ -231,16 +232,20 @@ public class DefaultListableBeanFactory implements BeanFactory {
 
     private void doAwareMethod(Object bean, String beanName, Class<?> beanClass) {
         if (bean instanceof ApplicationContextAware){
-            log.debug("invoke ApplicationContextAware: {}", beanClass.getName());
+            log.debug("ApplicationContextAware: {}", beanClass.getName());
             ((ApplicationContextAware) bean).setApplicationContext(applicationContext);
         }
         if (bean instanceof BeanFactoryAware){
-            log.debug("invoke BeanFactoryAware: {}", beanClass.getName());
+            log.debug("BeanFactoryAware: {}", beanClass.getName());
             ((BeanFactoryAware) bean).setBeanFactory(this);
         }
         if (bean instanceof BeanNameAware){
-            log.debug("invoke BeanNameAware: {}", beanClass.getName());
+            log.debug("BeanNameAware: {}", beanClass.getName());
             ((BeanNameAware) bean).setBeanName(beanName);
+        }
+        if (bean instanceof EnvironmentAware){
+            log.debug("EnvironmentAware: {}", beanClass.getName());
+            ((EnvironmentAware) bean).setProperties(applicationContext.getProperties());
         }
     }
 
