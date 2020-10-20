@@ -1,10 +1,11 @@
 package org.spring.framework.ioc;
 
 import lombok.extern.slf4j.Slf4j;
-import org.spring.framework.core.annotation.Value;
 import org.spring.framework.core.EnvironmentResolver;
 import org.spring.framework.core.InstantiationAwareBeanPostProcessor;
-import org.spring.framework.core.util.ContextLoader;
+import org.spring.framework.core.annotation.Value;
+import org.spring.framework.core.aware.ApplicationContextAware;
+import org.spring.framework.core.context.ApplicationContext;
 
 import java.lang.reflect.Field;
 
@@ -16,15 +17,11 @@ import java.lang.reflect.Field;
  * @Date 2020/10/13 14:04
  */
 @Slf4j
-public class ValueAnnotationBeanPostProcessor implements InstantiationAwareBeanPostProcessor {
+public class ValueAnnotationBeanPostProcessor implements InstantiationAwareBeanPostProcessor, ApplicationContextAware {
 
     private EnvironmentResolver environmentResolver;
 
     public String getProperties(String key) {
-        if (null == environmentResolver){
-            environmentResolver = ContextLoader.getContext();
-        }
-
         return environmentResolver.getValue(key);
     }
 
@@ -50,4 +47,8 @@ public class ValueAnnotationBeanPostProcessor implements InstantiationAwareBeanP
         }
     }
 
+    @Override
+    public void setApplicationContext(ApplicationContext context) {
+        environmentResolver = context;
+    }
 }

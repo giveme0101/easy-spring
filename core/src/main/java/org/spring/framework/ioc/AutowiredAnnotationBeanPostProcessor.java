@@ -1,11 +1,10 @@
 package org.spring.framework.ioc;
 
 import lombok.extern.slf4j.Slf4j;
+import org.spring.framework.core.InstantiationAwareBeanPostProcessor;
 import org.spring.framework.core.annotation.Autowired;
 import org.spring.framework.core.aware.BeanFactoryAware;
-import org.spring.framework.core.InstantiationAwareBeanPostProcessor;
 import org.spring.framework.core.bean.BeanFactory;
-import org.spring.framework.core.util.ContextLoader;
 import org.spring.framework.core.util.EscapeUtil;
 
 import java.lang.reflect.Field;
@@ -15,8 +14,6 @@ import java.lang.reflect.Method;
  * @Author kevin xiajun94@FoxMail.com
  * @Description
  *
- * TODO 无法回调 InstantiationAwareBeanPostProcessor, BeanFactoryAware 接口
- *
  * @name AutowiredAnnotationBeanPostProcessor
  * @Date 2020/10/13 14:04
  */
@@ -24,14 +21,6 @@ import java.lang.reflect.Method;
 public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareBeanPostProcessor, BeanFactoryAware {
 
     private BeanFactory beanFactory;
-
-    public BeanFactory getBeanFactory() {
-        if (null == beanFactory){
-            return ContextLoader.getContext();
-        }
-
-        return beanFactory;
-    }
 
     @Override
     public void postProcessProperties(Object bean, String beanName) {
@@ -46,7 +35,7 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
             try {
                 field.setAccessible(true);
                 Class fieldClass = field.getType();
-                Object fileInstance = getBeanFactory().getBean(fieldClass);
+                Object fileInstance = beanFactory.getBean(fieldClass);
                 field.set(bean, fileInstance);
                 log.debug("@Autowired {} {}", bean.getClass().getSimpleName(), fileInstance);
             } catch (IllegalAccessException e) {
@@ -65,7 +54,7 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
                 String setterName = method.getName();
                 String requiredBeanName = transSetterNameToBeanName(setterName);
                 method.setAccessible(true);
-                Object fileInstance = getBeanFactory().getBean(requiredBeanName);
+                Object fileInstance = beanFactory.getBean(requiredBeanName);
                 method.invoke(bean, fileInstance);
                 log.debug("@Autowired {} {}", bean.getClass().getSimpleName(), fileInstance);
             } catch (Exception ex){
@@ -80,7 +69,6 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
         return beanName;
     }
 
-    // TODO 暂时无法处理BeanFactory的生命周期
     @Override
     public void setBeanFactory(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;

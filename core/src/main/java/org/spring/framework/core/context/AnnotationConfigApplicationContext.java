@@ -21,7 +21,7 @@ public class AnnotationConfigApplicationContext extends AbstractApplicationConte
     public AnnotationConfigApplicationContext(Class<?>... configClass) {
         super();
         beanDefinitionReader = new BeanDefinitionReader();
-        this.beanFactory = new DefaultListableBeanFactory();
+        this.beanFactory = new DefaultListableBeanFactory(this);
         BeanDefinitionHolder.putAll(AnnotationConfigLoader.registerAnnotationConfigClass());
         this.beanDefinitionReader.register(configClass);
         this.refresh();

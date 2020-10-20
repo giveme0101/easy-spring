@@ -15,8 +15,8 @@ A sample IOC framework like spring, ^^
 * [ ] 拦截器 Interception 无法被Spring管理
 * [x] 构造器注入(不支持list、map、array等复合类型)
 * [x] BeanNameAware
-* [ ] BeanFactoryAware (无法对BeanFactory创建bean生命周期)
-* [ ] ApplicationContextAware (无法对ApplicationContext创建bean生命周期)
+* [x] BeanFactoryAware
+* [x] ApplicationContextAware
 * [ ] DisposableBean bean销毁
 * [x] ApplicationEvent (容器启动完毕事件)
 * [x] CommandLineRunner
@@ -24,7 +24,7 @@ A sample IOC framework like spring, ^^
 * [ ] Interceptor代理接口， @Autowire/构造器注入 接口的实现报错！
 * [x] @Import (引入外部Bean)
 * [ ] SPI
-* [x] @Order (仅支持 BeanPostProcessor -> postProcessAfterInitialization() )
+* [x] @Ordered (仅支持 BeanPostProcessor -> postProcessAfterInitialization() )
 * [x] @Transactional -> TransactionalAnnotationBeanPostProcessor
 
 ### AOP 

@@ -1,13 +1,16 @@
 package org.spring.framework.core.bean;
 
 import lombok.extern.slf4j.Slf4j;
-import org.spring.framework.core.annotation.Order;
-import org.spring.framework.core.aware.BeanNameAware;
-import org.spring.framework.core.bd.BeanDefinition;
-import org.spring.framework.core.bd.BeanDefinitionHolder;
 import org.spring.framework.core.BeanPostProcessor;
 import org.spring.framework.core.InitializingBean;
 import org.spring.framework.core.InstantiationAwareBeanPostProcessor;
+import org.spring.framework.core.annotation.Ordered;
+import org.spring.framework.core.aware.ApplicationContextAware;
+import org.spring.framework.core.aware.BeanFactoryAware;
+import org.spring.framework.core.aware.BeanNameAware;
+import org.spring.framework.core.bd.BeanDefinition;
+import org.spring.framework.core.bd.BeanDefinitionHolder;
+import org.spring.framework.core.context.ApplicationContext;
 import org.spring.framework.core.util.BeanNameUtil;
 import org.spring.framework.ioc.AutowiredAnnotationBeanPostProcessor;
 import org.spring.framework.ioc.ValueAnnotationBeanPostProcessor;
@@ -26,7 +29,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DefaultListableBeanFactory implements BeanFactory {
 
+    private ApplicationContext applicationContext;
     private Map<String, Object> singletonObjects = new ConcurrentHashMap<>();
+
+    public DefaultListableBeanFactory(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 
     @Override
     public Object getBean(String beanName) {
@@ -139,11 +147,11 @@ public class DefaultListableBeanFactory implements BeanFactory {
         // 1. 实例化
         Object bean = doInstance(beanClass);
 
+        // aware
+        doAwareMethod(bean, beanName, beanClass);
+
         // 2. 设置属性
         populateBean(bean, beanClass);
-
-        // aware
-        doAware(bean, beanName, beanClass);
 
         // BeanPostProcessor beanPostBeforeInitialization
         bean = beanPostBeforeInitialization(bean, beanName);
@@ -202,21 +210,34 @@ public class DefaultListableBeanFactory implements BeanFactory {
     }
 
     private void populateBean(Object bean, Class<?> beanClass) {
+
+        // 设置属性
+        // NOP
+
+        // 执行@Autowried注入
         InstantiationAwareBeanPostProcessor autowiredAnnotationBeanPostProcessor = (AutowiredAnnotationBeanPostProcessor) singletonObjects.get("autowiredAnnotationBeanPostProcessor");
         if (null != autowiredAnnotationBeanPostProcessor) {
             BeanDefinition beanDefinition = BeanDefinitionHolder.get(beanClass);
             autowiredAnnotationBeanPostProcessor.postProcessProperties(bean, BeanNameUtil.getBeanName(beanDefinition));
         }
 
+        // 执行@Value注入
         InstantiationAwareBeanPostProcessor valueAnnotationBeanPostProcessor = (ValueAnnotationBeanPostProcessor) singletonObjects.get("valueAnnotationBeanPostProcessor");
         if (null != valueAnnotationBeanPostProcessor) {
             BeanDefinition beanDefinition = BeanDefinitionHolder.get(beanClass);
             valueAnnotationBeanPostProcessor.postProcessProperties(bean, BeanNameUtil.getBeanName(beanDefinition));
         }
-
     }
 
-    private void doAware(Object bean, String beanName, Class<?> beanClass) {
+    private void doAwareMethod(Object bean, String beanName, Class<?> beanClass) {
+        if (bean instanceof ApplicationContextAware){
+            log.debug("invoke ApplicationContextAware: {}", beanClass.getName());
+            ((ApplicationContextAware) bean).setApplicationContext(applicationContext);
+        }
+        if (bean instanceof BeanFactoryAware){
+            log.debug("invoke BeanFactoryAware: {}", beanClass.getName());
+            ((BeanFactoryAware) bean).setBeanFactory(this);
+        }
         if (bean instanceof BeanNameAware){
             log.debug("invoke BeanNameAware: {}", beanClass.getName());
             ((BeanNameAware) bean).setBeanName(beanName);
@@ -241,8 +262,8 @@ public class DefaultListableBeanFactory implements BeanFactory {
 
                     int ao = 0, bo = 0;
 
-                    Order aa = a.getClass().getAnnotation(Order.class);
-                    Order ba = b.getClass().getAnnotation(Order.class);
+                    Ordered aa = a.getClass().getAnnotation(Ordered.class);
+                    Ordered ba = b.getClass().getAnnotation(Ordered.class);
 
                     if (aa != null){
                         ao = aa.value();
