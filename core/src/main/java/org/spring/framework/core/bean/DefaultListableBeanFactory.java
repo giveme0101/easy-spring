@@ -13,8 +13,6 @@ import org.spring.framework.core.bd.BeanDefinition;
 import org.spring.framework.core.bd.BeanDefinitionHolder;
 import org.spring.framework.core.context.ApplicationContext;
 import org.spring.framework.core.util.BeanNameUtil;
-import org.spring.framework.ioc.AutowiredAnnotationBeanPostProcessor;
-import org.spring.framework.ioc.ValueAnnotationBeanPostProcessor;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -215,18 +213,13 @@ public class DefaultListableBeanFactory implements BeanFactory {
         // 设置属性
         // NOP
 
-        // 执行@Autowried注入
-        InstantiationAwareBeanPostProcessor autowiredAnnotationBeanPostProcessor = (AutowiredAnnotationBeanPostProcessor) singletonObjects.get("autowiredAnnotationBeanPostProcessor");
-        if (null != autowiredAnnotationBeanPostProcessor) {
-            BeanDefinition beanDefinition = BeanDefinitionHolder.get(beanClass);
-            autowiredAnnotationBeanPostProcessor.postProcessProperties(bean, BeanNameUtil.getBeanName(beanDefinition));
-        }
-
-        // 执行@Value注入
-        InstantiationAwareBeanPostProcessor valueAnnotationBeanPostProcessor = (ValueAnnotationBeanPostProcessor) singletonObjects.get("valueAnnotationBeanPostProcessor");
-        if (null != valueAnnotationBeanPostProcessor) {
-            BeanDefinition beanDefinition = BeanDefinitionHolder.get(beanClass);
-            valueAnnotationBeanPostProcessor.postProcessProperties(bean, BeanNameUtil.getBeanName(beanDefinition));
+        // @Autowired、@Value 等注解生效
+        if  (!(bean instanceof  InstantiationAwareBeanPostProcessor)) {
+            Map<String, InstantiationAwareBeanPostProcessor> beansOfType = this.getBeansOfType(InstantiationAwareBeanPostProcessor.class);
+            beansOfType.values().forEach(processor -> {
+                BeanDefinition beanDefinition = BeanDefinitionHolder.get(beanClass);
+                processor.postProcessProperties(bean, BeanNameUtil.getBeanName(beanDefinition));
+            });
         }
     }
 

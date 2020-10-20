@@ -1,12 +1,12 @@
 package com.github.giveme0101.converter;
 
 import com.github.convert.BeanConverter;
-import org.spring.framework.jdbc.ResultSetConverter;
 import com.github.giveme0101.entity.Order;
 import com.github.giveme0101.entity.OrderDO;
 import com.github.giveme0101.entity.OrderStatusEnum;
-import org.spring.framework.core.annotation.Autowired;
 import org.spring.framework.core.annotation.Component;
+import org.spring.framework.core.annotation.Resource;
+import org.spring.framework.jdbc.ResultSetConverter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +20,8 @@ import java.sql.SQLException;
 @Component
 public class OrderConverter implements ResultSetConverter<OrderDO>, TwoWayConverter<Order, OrderDO> {
 
-    @Autowired
+//    @Autowired
+    @Resource(value = "beanConverter")
     private BeanConverter beanConverter;
 
     @Override

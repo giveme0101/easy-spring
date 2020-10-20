@@ -5,7 +5,7 @@ import org.spring.framework.core.bd.BeanDefinition;
 import org.spring.framework.core.bean.BeanDefinitionParser;
 import org.spring.framework.core.event.EventBeanPostProcessor;
 import org.spring.framework.ioc.AutowiredAnnotationBeanPostProcessor;
-import org.spring.framework.ioc.ValueAnnotationBeanPostProcessor;
+import org.spring.framework.ioc.CommonAnnotationBeanPostProcessor;
 import org.spring.framework.jdbc.ConnectionFactoryBean;
 import org.spring.framework.jdbc.JdbcTemplateImpl;
 import org.spring.framework.jdbc.tm.TransactionManager;
@@ -26,7 +26,7 @@ public class AnnotationConfigLoader {
         return new LinkedHashSet<BeanDefinition>(){{
 
             add(BeanDefinitionParser.parse(EventBeanPostProcessor.class));
-            add(BeanDefinitionParser.parse(ValueAnnotationBeanPostProcessor.class));
+            add(BeanDefinitionParser.parse(CommonAnnotationBeanPostProcessor.class));
             add(BeanDefinitionParser.parse(AutowiredAnnotationBeanPostProcessor.class));
 
             add(BeanDefinitionParser.parse(AopProxyBeanPostProcessor.class));

@@ -3,12 +3,15 @@ package org.spring.framework.ioc;
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.InstantiationAwareBeanPostProcessor;
 import org.spring.framework.core.annotation.Autowired;
+import org.spring.framework.core.annotation.Value;
 import org.spring.framework.core.aware.BeanFactoryAware;
+import org.spring.framework.core.aware.EnvironmentAware;
 import org.spring.framework.core.bean.BeanFactory;
 import org.spring.framework.core.util.EscapeUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Properties;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
@@ -18,9 +21,10 @@ import java.lang.reflect.Method;
  * @Date 2020/10/13 14:04
  */
 @Slf4j
-public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareBeanPostProcessor, BeanFactoryAware {
+public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareBeanPostProcessor, BeanFactoryAware, EnvironmentAware {
 
     private BeanFactory beanFactory;
+    private Properties properties;
 
     @Override
     public void postProcessProperties(Object bean, String beanName) {
@@ -28,10 +32,19 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
         // 字段注入
         Field[] declaredFields = bean.getClass().getDeclaredFields();
         for (final Field field : declaredFields) {
-            if (!field.isAnnotationPresent(Autowired.class)){
-                continue;
-            }
+            autowiredFiled(field, bean);
+            valueFiled(field, bean);
+        }
 
+        // Setter注入
+        Method[] declaredMethods = bean.getClass().getDeclaredMethods();
+        for (final Method method : declaredMethods) {
+            autowiredMethod(method, bean);
+        }
+    }
+
+    private void autowiredFiled(final Field field, final Object bean){
+        if (field.isAnnotationPresent(Autowired.class)){
             try {
                 field.setAccessible(true);
                 Class fieldClass = field.getType();
@@ -42,14 +55,10 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
                 e.printStackTrace();
             }
         }
+    }
 
-        // Setter注入
-        Method[] declaredMethods = bean.getClass().getDeclaredMethods();
-        for (final Method method : declaredMethods) {
-            if (!method.isAnnotationPresent(Autowired.class)){
-                continue;
-            }
-
+    private void autowiredMethod(final Method method, final Object bean){
+        if (method.isAnnotationPresent(Autowired.class)){
             try {
                 String setterName = method.getName();
                 String requiredBeanName = transSetterNameToBeanName(setterName);
@@ -59,6 +68,21 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
                 log.debug("@Autowired {} {}", bean.getClass().getSimpleName(), fileInstance);
             } catch (Exception ex){
                 ex.printStackTrace();
+            }
+        }
+    }
+
+    private void valueFiled(final Field field, final Object bean){
+        if (field.isAnnotationPresent(Value.class)){
+            Value annotation = field.getAnnotation(Value.class);
+            String key = annotation.value();
+
+            try {
+                field.setAccessible(true);
+                field.set(bean, properties.getProperty(key));
+                log.debug("@Value {} {}", bean.getClass().getSimpleName(), key);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -74,4 +98,8 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
         this.beanFactory = beanFactory;
     }
 
+    @Override
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
 }

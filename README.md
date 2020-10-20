@@ -7,8 +7,9 @@ A sample IOC framework like spring, ^^
 * [x] @ComponentScan
 * [x] @Component
 * [x] BeanPostProcessor
-* [x] @Autowired -> AutowiredAnnotationBeanPostProcessor -> InstantiationAwareBeanPostProcessor -> BeanPostProcessor
-* [x] @Value -> ValueAnnotationBeanPostProcessor -> InstantiationAwareBeanPostProcessor -> BeanPostProcessor
+* [x] @Autowired
+* [x] @Resource
+* [x] @Value
 * [x] FactoryBean(getObject(), getObjectType()) (getObject()方法产生的bean无法实现bean的生命周期)
 * [x] InitializingBean
 * [x] [AOP](#AOP)
