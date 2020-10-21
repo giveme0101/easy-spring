@@ -6,6 +6,7 @@ import net.sf.cglib.proxy.MethodProxy;
 import org.spring.framework.aop.Interceptor;
 import org.spring.framework.aop.MethodInvocation;
 import org.spring.framework.core.context.ApplicationContext;
+import org.spring.framework.core.exception.BeanInstantiationException;
 import org.spring.framework.core.util.ContextLoader;
 
 import java.lang.reflect.Constructor;
@@ -58,7 +59,7 @@ public class CglibMethodInterceptor implements MethodInterceptor {
             } catch (Exception ex){}
         }
 
-        throw new RuntimeException("构造方法注入失败！");
+        throw new BeanInstantiationException("构造方法注入失败！");
     }
 
     @Override
