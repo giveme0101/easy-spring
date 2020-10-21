@@ -1,6 +1,6 @@
 package org.spring.framework.core.util;
 
-import org.spring.framework.core.bd.BeanDefinition;
+import org.spring.framework.core.bd.RootBeanDefinition;
 import org.spring.framework.core.bean.FactoryBean;
 
 import java.lang.reflect.ParameterizedType;
@@ -15,11 +15,11 @@ import java.util.Arrays;
  */
 public class BeanNameUtil {
 
-    public static String getBeanName(BeanDefinition bd){
+    public static String getBeanName(RootBeanDefinition bd){
         return EscapeUtil.firstCharLowerCase(bd.getBeanClass().getSimpleName());
     }
 
-    public static String getFactoryBeanProductBeanName(BeanDefinition bd){
+    public static String getFactoryBeanProductBeanName(RootBeanDefinition bd){
 
         Class beanClass = bd.getBeanClass();
         Type type = Arrays.stream(beanClass.getGenericInterfaces()).filter(i -> FactoryBean.class.isAssignableFrom(beanClass))

@@ -16,18 +16,18 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BeanDefinitionRegistry {
 
-    private static Map<String, BeanDefinition> beanDefinitionMap = new LinkedHashMap<>();
+    private static Map<String, RootBeanDefinition> beanDefinitionMap = new LinkedHashMap<>();
     private static final Map<Class, Set<String>> allBeanNamesByType = new ConcurrentHashMap<>(64);
 
-    public static void putAll(Set<BeanDefinition> beanDefinitionSet) {
+    public static void putAll(Set<RootBeanDefinition> beanDefinitionSet) {
         beanDefinitionSet.forEach(BeanDefinitionRegistry::put);
     }
 
-    public static void put(BeanDefinition beanDefinition){
+    public static void put(RootBeanDefinition beanDefinition){
         put(BeanNameUtil.getBeanName(beanDefinition), beanDefinition);
     }
 
-    public static void put(String beanName, BeanDefinition beanDefinition){
+    public static void put(String beanName, RootBeanDefinition beanDefinition){
 
         beanDefinitionMap.put(beanName, beanDefinition);
         log.debug("register bean: {}", beanName);
@@ -40,12 +40,12 @@ public class BeanDefinitionRegistry {
         }
     }
 
-    public static BeanDefinition get(String beanName){
+    public static RootBeanDefinition get(String beanName){
         return beanDefinitionMap.get(beanName);
     }
 
-    public static BeanDefinition get(Class clazz){
-        Collection<BeanDefinition> beanDefinitions = getBeansOfType(clazz);
+    public static RootBeanDefinition get(Class clazz){
+        Collection<RootBeanDefinition> beanDefinitions = getBeansOfType(clazz);
         if (null == beanDefinitions || beanDefinitions.isEmpty()){
             return null;
         }
@@ -54,15 +54,15 @@ public class BeanDefinitionRegistry {
             throw new RuntimeException("存在多个。。。");
         }
 
-        return beanDefinitions.toArray(new BeanDefinition[0])[0];
+        return beanDefinitions.toArray(new RootBeanDefinition[0])[0];
     }
 
-    public static Collection<BeanDefinition> getBeansOfType(Class clazz){
+    public static Collection<RootBeanDefinition> getBeansOfType(Class clazz){
         Set<String> beanNameOfTypes = allBeanNamesByType.get(clazz);
         return beanNameOfTypes.stream().map(beanDefinitionMap::get).collect(Collectors.toList());
     }
 
-    public static Map<String, BeanDefinition> getBeanDefinitionMap() {
+    public static Map<String, RootBeanDefinition> getBeanDefinitionMap() {
         return new LinkedHashMap<>(beanDefinitionMap);
     }
 

@@ -2,7 +2,7 @@ package org.spring.framework.core.bean;
 
 import org.spring.framework.core.annotation.Lazy;
 import org.spring.framework.core.annotation.Scope;
-import org.spring.framework.core.bd.BeanDefinition;
+import org.spring.framework.core.bd.RootBeanDefinition;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
@@ -12,9 +12,9 @@ import org.spring.framework.core.bd.BeanDefinition;
  */
 public class BeanDefinitionParser {
 
-    public static BeanDefinition parse(Class beanClass){
+    public static RootBeanDefinition parse(Class beanClass){
 
-        BeanDefinition bd = new BeanDefinition();
+        RootBeanDefinition bd = new RootBeanDefinition();
 
         if (beanClass.isAnnotationPresent(Scope.class)) {
             Scope scope = (Scope) beanClass.getAnnotation(Scope.class);

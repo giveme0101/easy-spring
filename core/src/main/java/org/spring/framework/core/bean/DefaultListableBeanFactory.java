@@ -9,7 +9,7 @@ import org.spring.framework.core.aware.ApplicationContextAware;
 import org.spring.framework.core.aware.BeanFactoryAware;
 import org.spring.framework.core.aware.BeanNameAware;
 import org.spring.framework.core.aware.EnvironmentAware;
-import org.spring.framework.core.bd.BeanDefinition;
+import org.spring.framework.core.bd.RootBeanDefinition;
 import org.spring.framework.core.bd.BeanDefinitionRegistry;
 import org.spring.framework.core.context.ApplicationContext;
 import org.spring.framework.core.util.BeanNameUtil;
@@ -35,7 +35,7 @@ public class DefaultListableBeanFactory extends DefaultSingletonBeanRegistry imp
 
     @Override
     public Object getBean(String beanName) {
-        BeanDefinition beanDefinition = BeanDefinitionRegistry.get(beanName);
+        RootBeanDefinition beanDefinition = BeanDefinitionRegistry.get(beanName);
         if (null == beanDefinition){
             return null;
         }
@@ -61,7 +61,7 @@ public class DefaultListableBeanFactory extends DefaultSingletonBeanRegistry imp
     @Override
     public <T> T getBean(Class<T> beanClass) {
 
-        BeanDefinition beanDefinition = BeanDefinitionRegistry.get(beanClass);
+        RootBeanDefinition beanDefinition = BeanDefinitionRegistry.get(beanClass);
         if (null == beanDefinition){
             return null;
         }
@@ -73,10 +73,10 @@ public class DefaultListableBeanFactory extends DefaultSingletonBeanRegistry imp
     @Override
     public <T> Map<String, T> getBeansOfType(Class<T> beanClass) {
 
-        Collection<BeanDefinition> beansOfType = BeanDefinitionRegistry.getBeansOfType(beanClass);
+        Collection<RootBeanDefinition> beansOfType = BeanDefinitionRegistry.getBeansOfType(beanClass);
         Map<String, T> resultMap = new HashMap<>(beansOfType.size());
 
-        for (final BeanDefinition bd : beansOfType) {
+        for (final RootBeanDefinition bd : beansOfType) {
             String beanName = BeanNameUtil.getBeanName(bd);
             Object bean = getBean(beanName);
             resultMap.put(beanName, (T) bean);
@@ -87,11 +87,11 @@ public class DefaultListableBeanFactory extends DefaultSingletonBeanRegistry imp
 
     @Override
     public void refresh() {
-        Map<String, BeanDefinition> beanDefinitionMap = BeanDefinitionRegistry.getBeanDefinitionMap();
-        for (final Map.Entry<String, BeanDefinition> entry : beanDefinitionMap.entrySet()) {
+        Map<String, RootBeanDefinition> beanDefinitionMap = BeanDefinitionRegistry.getBeanDefinitionMap();
+        for (final Map.Entry<String, RootBeanDefinition> entry : beanDefinitionMap.entrySet()) {
 
             String beanName = entry.getKey();
-            BeanDefinition bd = entry.getValue();
+            RootBeanDefinition bd = entry.getValue();
 
             if (bd.getIsPrototype() || bd.getIsLazyInit()){
                 continue;
@@ -106,7 +106,7 @@ public class DefaultListableBeanFactory extends DefaultSingletonBeanRegistry imp
         }
     }
 
-    private Object doCreateBean(String beanName, BeanDefinition bd) {
+    private Object doCreateBean(String beanName, RootBeanDefinition bd) {
 
         if (bd.getIsFactoryBean()){
 
@@ -123,7 +123,7 @@ public class DefaultListableBeanFactory extends DefaultSingletonBeanRegistry imp
             this.registerSingleton(factoryBeanName, factoryBean);
 
             // 创建工厂bean生产的bean
-            BeanDefinition beanDefinition = new BeanDefinition();
+            RootBeanDefinition beanDefinition = new RootBeanDefinition();
             beanDefinition.setBeanClass(productBeanClass);
             beanDefinition.setIsSingleton(factoryBean.isSingleton());
             BeanDefinitionRegistry.put(productBeanName, beanDefinition);
@@ -137,7 +137,7 @@ public class DefaultListableBeanFactory extends DefaultSingletonBeanRegistry imp
         }
     }
 
-    private Object createBean(String beanName, BeanDefinition bd) {
+    private Object createBean(String beanName, RootBeanDefinition bd) {
 
         Class<?> beanClass = bd.getBeanClass();
 
@@ -215,7 +215,7 @@ public class DefaultListableBeanFactory extends DefaultSingletonBeanRegistry imp
         if  (!(bean instanceof  InstantiationAwareBeanPostProcessor)) {
             Map<String, InstantiationAwareBeanPostProcessor> beansOfType = this.getBeansOfType(InstantiationAwareBeanPostProcessor.class);
             beansOfType.values().forEach(processor -> {
-                BeanDefinition beanDefinition = BeanDefinitionRegistry.get(beanClass);
+                RootBeanDefinition beanDefinition = BeanDefinitionRegistry.get(beanClass);
                 processor.postProcessProperties(bean, BeanNameUtil.getBeanName(beanDefinition));
             });
         }
