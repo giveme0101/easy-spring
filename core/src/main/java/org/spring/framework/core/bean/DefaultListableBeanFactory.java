@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * @Date 2020/09/17 13:29
  */
 @Slf4j
-public class DefaultListableBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory {
+public class DefaultListableBeanFactory extends AbstractBeanFactory {
 
     private ApplicationContext applicationContext;
 
