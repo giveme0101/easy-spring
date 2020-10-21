@@ -10,6 +10,8 @@ import java.util.Map;
  */
 public interface BeanFactory {
 
+    String FACTORY_BEAN_PREFIX = "&";
+
     Object getBean(String beanName);
 
     <T> T getBean(Class<T> beanClass);

@@ -16,7 +16,6 @@ import org.spring.framework.core.util.BeanNameUtil;
 
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -26,10 +25,9 @@ import java.util.stream.Collectors;
  * @Date 2020/09/17 13:29
  */
 @Slf4j
-public class DefaultListableBeanFactory implements BeanFactory {
+public class DefaultListableBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory {
 
     private ApplicationContext applicationContext;
-    private Map<String, Object> singletonObjects = new ConcurrentHashMap<>();
 
     public DefaultListableBeanFactory(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
@@ -48,11 +46,11 @@ public class DefaultListableBeanFactory implements BeanFactory {
 
         if (beanDefinition.getIsLazyInit()) {
             Object bean = doCreateBean(beanName, beanDefinition);
-            singletonObjects.put(beanName, bean);
+            this.registerSingleton(beanName, bean);
             return bean;
         }
 
-        Object bean = singletonObjects.get(beanName);
+        Object bean = this.getSingleton(beanName);
         if (null == bean){
            return doCreateBean(beanName, beanDefinition);
         }
@@ -99,12 +97,12 @@ public class DefaultListableBeanFactory implements BeanFactory {
                 continue;
             }
 
-            if (singletonObjects.containsKey(beanName)){
+            if (this.containsSingleton(beanName)){
                 continue;
             }
 
             Object bean = doCreateBean(beanName, bd);
-            singletonObjects.put(beanName, bean);
+            this.registerSingleton(beanName, bean);
         }
     }
 
@@ -122,7 +120,7 @@ public class DefaultListableBeanFactory implements BeanFactory {
             String factoryBeanName = FactoryBean.BEAN_NAME_PREFIX + productBeanName;
             FactoryBean factoryBean = (FactoryBean) createBean(factoryBeanName, bd);
             BeanDefinitionRegistry.put(factoryBeanName, bd);
-            singletonObjects.put(factoryBeanName, factoryBean);
+            this.registerSingleton(factoryBeanName, factoryBean);
 
             // 创建工厂bean生产的bean
             BeanDefinition beanDefinition = new BeanDefinition();
@@ -130,7 +128,7 @@ public class DefaultListableBeanFactory implements BeanFactory {
             beanDefinition.setIsSingleton(factoryBean.isSingleton());
             BeanDefinitionRegistry.put(productBeanName, beanDefinition);
             if (factoryBean.isSingleton()){
-                singletonObjects.put(productBeanName, factoryBean.getObject());
+                this.registerSingleton(productBeanName, factoryBean.getObject());
             }
 
             return factoryBean;
@@ -253,7 +251,8 @@ public class DefaultListableBeanFactory implements BeanFactory {
 
         Object postBean = bean;
 
-        Collection<BeanPostProcessor> values = singletonObjects.values().stream()
+        Collection<BeanPostProcessor> values = Arrays.stream(this.getSingletonNames())
+                .map(this::getSingleton)
                 .filter(o -> o instanceof BeanPostProcessor)
                 .map(BeanPostProcessor.class::cast)
                 .sorted((a, b) -> {
@@ -276,7 +275,7 @@ public class DefaultListableBeanFactory implements BeanFactory {
                 .collect(Collectors.toList());
 
         for (final BeanPostProcessor postProcessor : values ) {
-                postBean = postProcessor.postProcessAfterInitialization(postBean, beanName);
+            postBean = postProcessor.postProcessAfterInitialization(postBean, beanName);
         }
 
         return postBean;
@@ -285,7 +284,9 @@ public class DefaultListableBeanFactory implements BeanFactory {
     private Object beanPostBeforeInitialization(Object bean, String beanName) {
 
         Object postBean = bean;
-        for (final Object object : singletonObjects.values()) {
+        List singletonObjects = Arrays.stream(this.getSingletonNames()).map(this::getSingleton).collect(Collectors.toList());
+
+        for (final Object object : singletonObjects) {
             if (object instanceof BeanPostProcessor){
                 BeanPostProcessor postProcessor = (BeanPostProcessor) object;
                 postBean = postProcessor.postProcessBeforeInitialization(postBean, beanName);
