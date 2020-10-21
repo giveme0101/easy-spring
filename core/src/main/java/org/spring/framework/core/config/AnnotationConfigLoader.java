@@ -2,7 +2,7 @@ package org.spring.framework.core.config;
 
 import org.spring.framework.aop.AopProxyBeanPostProcessor;
 import org.spring.framework.core.bd.RootBeanDefinition;
-import org.spring.framework.core.bean.BeanDefinitionParser;
+import org.spring.framework.core.bd.BeanDefinitionParser;
 import org.spring.framework.core.event.EventBeanPostProcessor;
 import org.spring.framework.ioc.AutowiredAnnotationBeanPostProcessor;
 import org.spring.framework.ioc.CommonAnnotationBeanPostProcessor;

@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.annotation.Component;
 import org.spring.framework.core.annotation.ComponentScan;
 import org.spring.framework.aop.InterceptorFactory;
-import org.spring.framework.core.bean.BeanDefinitionParser;
 import org.spring.framework.core.bean.ImportClassImporter;
 import org.spring.framework.core.util.EscapeUtil;
 

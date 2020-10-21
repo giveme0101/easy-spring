@@ -1,8 +1,8 @@
-package org.spring.framework.core.bean;
+package org.spring.framework.core.bd;
 
 import org.spring.framework.core.annotation.Lazy;
 import org.spring.framework.core.annotation.Scope;
-import org.spring.framework.core.bd.RootBeanDefinition;
+import org.spring.framework.core.bean.FactoryBean;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
