@@ -9,9 +9,10 @@ import org.spring.framework.core.aware.ApplicationContextAware;
 import org.spring.framework.core.aware.BeanFactoryAware;
 import org.spring.framework.core.aware.BeanNameAware;
 import org.spring.framework.core.aware.EnvironmentAware;
-import org.spring.framework.core.bd.RootBeanDefinition;
 import org.spring.framework.core.bd.BeanDefinitionRegistry;
+import org.spring.framework.core.bd.RootBeanDefinition;
 import org.spring.framework.core.context.ApplicationContext;
+import org.spring.framework.core.exception.NoSuchBeanDefinitionException;
 import org.spring.framework.core.util.BeanNameUtil;
 
 import java.lang.reflect.*;
@@ -185,7 +186,7 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
                     Class<?> type = parameter.getType();
                     Object bean = getBean(type);
                     if (null == bean){
-                        throw new RuntimeException("无法注入" + type);
+                        throw new NoSuchBeanDefinitionException("获取bean失败：" + type);
                     }
 
                     params.add(bean);

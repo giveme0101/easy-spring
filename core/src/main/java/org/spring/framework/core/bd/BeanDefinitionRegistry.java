@@ -1,6 +1,7 @@
 package org.spring.framework.core.bd;
 
 import lombok.extern.slf4j.Slf4j;
+import org.spring.framework.core.exception.BeansException;
 import org.spring.framework.core.util.BeanNameUtil;
 
 import java.util.*;
@@ -51,7 +52,7 @@ public class BeanDefinitionRegistry {
         }
 
         if (beanDefinitions.size() != 1){
-            throw new RuntimeException("存在多个。。。");
+            throw new BeansException("存在多个beanDefinition");
         }
 
         return beanDefinitions.toArray(new RootBeanDefinition[0])[0];
