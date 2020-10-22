@@ -19,7 +19,8 @@ public class YmlLoader extends AbstractResourcesLoader {
 
     @Override
     public Map<String, String> loadProperty() throws IOException {
-        Map<String, Object> map = new Yaml().loadAs(new InputStreamReader(new FileInputStream(property)), Map.class);
+        InputStreamReader isr = new InputStreamReader(new FileInputStream(this.getProperty()));
+        Map<String, Object> map = new Yaml().loadAs(isr, Map.class);
         return expandMap(null, map);
     }
 

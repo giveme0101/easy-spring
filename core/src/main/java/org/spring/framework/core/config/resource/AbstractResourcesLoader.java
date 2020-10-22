@@ -13,8 +13,8 @@ import java.util.Map;
  */
 public abstract class AbstractResourcesLoader implements ResourceLoader {
 
-    protected File property;
     protected ResourceLoader next;
+    private File property;
 
     @Override
     public void setNext(ResourceLoader next) {
@@ -34,6 +34,10 @@ public abstract class AbstractResourcesLoader implements ResourceLoader {
 
         this.property = file;
         return loadProperty();
+    }
+
+    public File getProperty(){
+        return property;
     }
 
     abstract Map<String, String> loadProperty() throws IOException;

@@ -19,7 +19,7 @@ public class PropertiesLoader extends AbstractResourcesLoader {
     public Map<String, String> loadProperty() throws IOException {
 
         Properties prop = new Properties();
-        prop.load(new InputStreamReader(new FileInputStream(property)));
+        prop.load(new InputStreamReader(new FileInputStream(this.getProperty())));
 
         Map<String, String> resultMap = new HashMap<>(prop.size());
 
