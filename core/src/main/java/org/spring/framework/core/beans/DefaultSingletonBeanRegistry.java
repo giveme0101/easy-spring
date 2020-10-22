@@ -15,7 +15,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
 
+    /**
+     * 单例池 一级缓存
+      */
     private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>();
+    /**
+     * 早期对象池 二级缓存 TODO 解决循环依赖
+      */
+    private final Map<String, Object> earlySingletonObjects = new ConcurrentHashMap<>();
 
     private final Map<String, Object> disposableBeans = new LinkedHashMap();
 
