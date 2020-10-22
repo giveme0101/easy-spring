@@ -2,6 +2,7 @@ package org.spring.framework.core.bd;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.spring.framework.core.beans.PropertyValues;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
@@ -33,6 +34,8 @@ public class RootBeanDefinition implements BeanDefinition {
     private Boolean isSingleton = true;
 
     private Boolean isPrototype = false;
+
+    private PropertyValues propertyValues;
 
     public void setScope(String scope) {
         this.isSingleton = SINGLETON.equals(scope);

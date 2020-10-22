@@ -1,7 +1,7 @@
 package org.spring.framework.core.context;
 
-import org.spring.framework.core.bean.BeanFactory;
-import org.spring.framework.core.bean.DefaultListableBeanFactory;
+import org.spring.framework.core.beans.BeanFactory;
+import org.spring.framework.core.beans.DefaultListableBeanFactory;
 import org.spring.framework.core.bd.BeanDefinitionRegistry;
 import org.spring.framework.core.bd.BeanDefinitionReader;
 import org.spring.framework.core.config.AnnotationConfigLoader;

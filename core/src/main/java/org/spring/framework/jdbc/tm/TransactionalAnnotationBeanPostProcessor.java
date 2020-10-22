@@ -6,7 +6,7 @@ import org.spring.framework.aop.DefaultAopProxyFactory;
 import org.spring.framework.aop.Interceptor;
 import org.spring.framework.aop.MethodInvocation;
 import org.spring.framework.core.BeanPostProcessor;
-import org.spring.framework.core.annotation.Ordered;
+import org.spring.framework.core.annotation.Order;
 import org.spring.framework.core.aware.ApplicationContextAware;
 import org.spring.framework.core.context.ApplicationContext;
 
@@ -20,7 +20,7 @@ import java.util.Set;
  * @Date 2020/10/16 15:30
  */
 // 保证第一个代理，防止被jdk代理后无法识别
-@Ordered(value = Integer.MAX_VALUE)
+@Order(value = Integer.MAX_VALUE)
 public class TransactionalAnnotationBeanPostProcessor implements BeanPostProcessor, ApplicationContextAware {
 
     private ApplicationContext applicationContext;

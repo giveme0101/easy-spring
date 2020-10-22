@@ -1,4 +1,4 @@
-package org.spring.framework.core.bean;
+package org.spring.framework.core.beans;
 
 import org.reflections.Reflections;
 import org.spring.framework.core.annotation.Import;

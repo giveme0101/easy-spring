@@ -1,17 +1,13 @@
 package org.spring.framework.core;
 
+import org.spring.framework.core.beans.PropertyValues;
+
 public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor{
 
-    default Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) {
-        return null;
-    }
+    Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName);
 
-    default boolean postProcessAfterInstantiation(Object bean, String beanName) {
-        return true;
-    }
+    boolean postProcessAfterInstantiation(Object bean, String beanName);
 
-    default void postProcessProperties(Object bean, String beanName) {
-
-    }
+    PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName);
 
 }

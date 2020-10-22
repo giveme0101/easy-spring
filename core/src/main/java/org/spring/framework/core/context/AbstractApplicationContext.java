@@ -1,7 +1,7 @@
 package org.spring.framework.core.context;
 
 import org.spring.framework.core.CommandLineRunner;
-import org.spring.framework.core.bean.BeanFactory;
+import org.spring.framework.core.beans.BeanFactory;
 import org.spring.framework.core.event.Event;
 import org.spring.framework.core.event.EventListener;
 import org.spring.framework.core.util.BannerPrinter;

@@ -4,7 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.InstantiationAwareBeanPostProcessor;
 import org.spring.framework.core.annotation.Resource;
 import org.spring.framework.core.aware.BeanFactoryAware;
-import org.spring.framework.core.bean.BeanFactory;
+import org.spring.framework.core.beans.BeanFactory;
+import org.spring.framework.core.beans.PropertyValues;
 
 import java.lang.reflect.Field;
 
@@ -21,12 +22,14 @@ public class CommonAnnotationBeanPostProcessor implements InstantiationAwareBean
     private BeanFactory beanFactory;
 
     @Override
-    public void postProcessProperties(Object bean, String beanName) {
+    public PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName) {
 
         Field[] declaredFields = bean.getClass().getDeclaredFields();
         for (final Field field : declaredFields) {
             resourceFiled(field, bean);
         }
+
+        return pvs;
     }
 
     private void resourceFiled(final Field field, final Object bean){
@@ -50,4 +53,15 @@ public class CommonAnnotationBeanPostProcessor implements InstantiationAwareBean
     public void setBeanFactory(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
+
+    @Override
+    public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) {
+        return null;
+    }
+
+    @Override
+    public boolean postProcessAfterInstantiation(Object bean, String beanName) {
+        return true;
+    }
+
 }

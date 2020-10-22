@@ -6,7 +6,8 @@ import org.spring.framework.core.annotation.Autowired;
 import org.spring.framework.core.annotation.Value;
 import org.spring.framework.core.aware.BeanFactoryAware;
 import org.spring.framework.core.aware.EnvironmentAware;
-import org.spring.framework.core.bean.BeanFactory;
+import org.spring.framework.core.beans.BeanFactory;
+import org.spring.framework.core.beans.PropertyValues;
 import org.spring.framework.core.util.EscapeUtil;
 
 import java.lang.reflect.Field;
@@ -27,7 +28,7 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
     private Properties properties;
 
     @Override
-    public void postProcessProperties(Object bean, String beanName) {
+    public PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName) {
 
         // 字段注入
         Field[] declaredFields = bean.getClass().getDeclaredFields();
@@ -41,6 +42,8 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
         for (final Method method : declaredMethods) {
             autowiredMethod(method, bean);
         }
+
+        return pvs;
     }
 
     private void autowiredFiled(final Field field, final Object bean){
@@ -102,4 +105,15 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
     public void setProperties(Properties properties) {
         this.properties = properties;
     }
+
+    @Override
+    public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) {
+        return null;
+    }
+
+    @Override
+    public boolean postProcessAfterInstantiation(Object bean, String beanName) {
+        return true;
+    }
+
 }
