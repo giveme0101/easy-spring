@@ -5,14 +5,15 @@ import org.spring.framework.core.InstantiationAwareBeanPostProcessor;
 import org.spring.framework.core.annotation.Autowired;
 import org.spring.framework.core.annotation.Value;
 import org.spring.framework.core.aware.BeanFactoryAware;
-import org.spring.framework.core.aware.EnvironmentAware;
+import org.spring.framework.core.aware.ResourceAware;
 import org.spring.framework.core.beans.BeanFactory;
 import org.spring.framework.core.beans.PropertyValues;
+import org.spring.framework.core.util.Assert;
 import org.spring.framework.core.util.EscapeUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
@@ -22,10 +23,10 @@ import java.util.Properties;
  * @Date 2020/10/13 14:04
  */
 @Slf4j
-public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareBeanPostProcessor, BeanFactoryAware, EnvironmentAware {
+public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareBeanPostProcessor, BeanFactoryAware, ResourceAware {
 
     private BeanFactory beanFactory;
-    private Properties properties;
+    private Map<String, String> resources;
 
     @Override
     public PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName) {
@@ -81,8 +82,11 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
             String key = annotation.value();
 
             try {
+                String value = resources.get(key);
+                Assert.notNull(value, "获取配置【" + key + "】失败");
+
                 field.setAccessible(true);
-                field.set(bean, properties.getProperty(key));
+                field.set(bean, value);
                 log.debug("@Value {} {}", bean.getClass().getSimpleName(), key);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
@@ -102,11 +106,6 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
     }
 
     @Override
-    public void setProperties(Properties properties) {
-        this.properties = properties;
-    }
-
-    @Override
     public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) {
         return null;
     }
@@ -116,4 +115,8 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
         return true;
     }
 
+    @Override
+    public void setResources(Map<String, String> resources) {
+        this.resources = resources;
+    }
 }

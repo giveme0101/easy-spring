@@ -7,14 +7,16 @@ import org.spring.framework.core.InstantiationAwareBeanPostProcessor;
 import org.spring.framework.core.aware.ApplicationContextAware;
 import org.spring.framework.core.aware.BeanFactoryAware;
 import org.spring.framework.core.aware.BeanNameAware;
-import org.spring.framework.core.aware.EnvironmentAware;
+import org.spring.framework.core.aware.ResourceAware;
 import org.spring.framework.core.bd.BeanDefinitionRegistry;
 import org.spring.framework.core.bd.RootBeanDefinition;
+import org.spring.framework.core.config.ResourceManager;
 import org.spring.framework.core.context.ApplicationContext;
 import org.spring.framework.core.exception.NoSuchBeanException;
 import org.spring.framework.core.util.AnnotationAwareOrderComparator;
 import org.spring.framework.core.util.BeanNameUtil;
 
+import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -307,9 +309,15 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
             log.debug("BeanNameAware: {}", beanClass.getName());
             ((BeanNameAware) bean).setBeanName(beanName);
         }
-        if (bean instanceof EnvironmentAware){
-            log.debug("EnvironmentAware: {}", beanClass.getName());
-            ((EnvironmentAware) bean).setProperties(applicationContext.getProperties());
+        if (bean instanceof ResourceAware){
+            log.debug("ResourceAware: {}", beanClass.getName());
+            try {
+                ResourceManager resourceManager = getBean(ResourceManager.class);
+                ((ResourceAware) bean).setResources(resourceManager.loadProperties());
+            } catch (IOException ex){
+                log.error(ex.getMessage(), ex);
+                System.exit(-1);
+            }
         }
     }
 

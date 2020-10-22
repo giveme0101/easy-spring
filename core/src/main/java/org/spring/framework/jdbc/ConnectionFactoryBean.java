@@ -13,13 +13,13 @@ import org.spring.framework.core.beans.FactoryBean;
 @Slf4j
 public class ConnectionFactoryBean implements FactoryBean<PooledConnectionFactory> {
 
-    @Value("datasource.driverClassName")
+    @Value("spring.datasource.driverClassName")
     private String driverClassName;
-    @Value("datasource.url")
+    @Value("spring.datasource.url")
     private String url;
-    @Value("datasource.username")
+    @Value("spring.datasource.username")
     private String userName;
-    @Value("datasource.password")
+    @Value("spring.datasource.password")
     private String password;
 
     @Override

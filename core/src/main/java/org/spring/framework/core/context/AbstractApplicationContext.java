@@ -1,5 +1,6 @@
 package org.spring.framework.core.context;
 
+import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.CommandLineRunner;
 import org.spring.framework.core.beans.BeanFactory;
 import org.spring.framework.core.event.Event;
@@ -7,9 +8,6 @@ import org.spring.framework.core.event.EventListener;
 import org.spring.framework.core.util.BannerPrinter;
 import org.spring.framework.core.util.ContextLoader;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.*;
 
 /**
@@ -18,13 +16,10 @@ import java.util.*;
  * @name AbstractApplicationContext
  * @Date 2020/09/17 9:11
  */
+@Slf4j
 public abstract class AbstractApplicationContext implements ApplicationContext {
 
     protected List<EventListener> eventObservableList = new ArrayList<>();
-
-    protected String defaultPropertiesLocation = "application.properties";
-
-    protected final Properties properties;
 
     private Thread shutdownHook;
 
@@ -32,11 +27,6 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
         BannerPrinter.print();
         ContextLoader.put(this);
         registerShutdownHook();
-        try {
-            properties = this.getProperties(defaultPropertiesLocation);
-        } catch (IOException ex) {
-            throw new RuntimeException("unable to load " + defaultPropertiesLocation);
-        }
     }
 
     @Override
@@ -63,26 +53,6 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
 
     protected void onRefresh() {
 
-    }
-
-    @Override
-    public Properties getProperties(String location) throws IOException {
-
-        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(defaultPropertiesLocation);
-        Properties prop = new Properties();
-        prop.load(new InputStreamReader(inputStream));
-
-        return prop;
-    }
-
-    @Override
-    public Properties getProperties() {
-        return properties;
-    }
-
-    @Override
-    public String getValue(String key) {
-        return properties.getProperty(key);
     }
 
     @Override

@@ -9,7 +9,7 @@ A sample IOC framework like spring, ^^
 * [x] BeanPostProcessor
 * [x] @Autowired
 * [x] @Resource
-* [x] @Value
+* [x] @Value (支持.properties/.yml/.yaml配置文件)
 * [x] FactoryBean(getObject(), getObjectType()) (getObject()方法产生的bean无法实现bean的生命周期)
 * [x] InitializingBean
 * [x] [AOP](#AOP)
@@ -17,7 +17,7 @@ A sample IOC framework like spring, ^^
 * [x] 构造器注入(不支持list、map、array等复合类型)
 * [x] BeanNameAware
 * [x] BeanFactoryAware
-* [x] EnvironmentAware
+* [x] ResourceAware
 * [x] ApplicationContextAware
 * [x] DisposableBean bean销毁
 * [x] ApplicationEvent (容器启动完毕事件)
