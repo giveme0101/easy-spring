@@ -22,6 +22,9 @@ import java.util.Set;
  */
 public class AnnotationConfigLoader {
 
+    /**
+     * TODO SPI
+      */
     public static Set<RootBeanDefinition> registerAnnotationConfigClass(){
         return new LinkedHashSet<RootBeanDefinition>(){{
 
