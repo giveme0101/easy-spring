@@ -152,7 +152,7 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
      *          2.3.2   autowireByName()
      *          2.3.3   autowireByType()
      *          2.3.4   InstantiationAwareBeanPostProcessor.postProcessPropertyValues 进行DI注入
-     *                  2.3.4.1    AutowiredAnnotationBeanPostProcessor (@Autowired、@Value)
+     *                  2.3.4.1    AutowiredAnnotationBeanPostProcessor (@Autowired、@Value、@Inject)
      *                  2.3.4.2    CommonAnnotationBeanPostProcessor (@PostConstruct、@PreDestroy、@Resource)
      *     2.4. initializeBean()
      *          2.4.1   invokeAwareMethods()
