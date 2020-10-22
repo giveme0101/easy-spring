@@ -12,7 +12,7 @@ import org.spring.framework.core.aware.EnvironmentAware;
 import org.spring.framework.core.bd.BeanDefinitionRegistry;
 import org.spring.framework.core.bd.RootBeanDefinition;
 import org.spring.framework.core.context.ApplicationContext;
-import org.spring.framework.core.exception.NoSuchBeanDefinitionException;
+import org.spring.framework.core.exception.NoSuchBeanException;
 import org.spring.framework.core.util.BeanNameUtil;
 
 import java.lang.reflect.*;
@@ -138,6 +138,32 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
         }
     }
 
+    /**
+     * org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#createBean
+     * 1. bean = resolveBeforeInstantiation()
+     *        1.1   applyBeanPostProcessorsBeforeInstantiation() -> bean = InstantiationAwareBeanPostProcessor#postProcessBeforeInstantiation
+     *        1.2   applyBeanPostProcessorsAfterInitialization() -> bean = BeanPostProcessor#postProcessAfterInitialization
+     *      if bean != null, 返回bean
+     * 2. doCreateBean
+     *     2.1. createBeanInstance() -> instantiateBean() -> InstantiationStrategy#instantiate
+     *     2.2. applyMergedBeanDefinitionPostProcessors() -> MergedBeanDefinitionPostProcessor#postProcessMergedBeanDefinition
+     *     2.3. populateBean()
+     *          2.3.1   InstantiationAwareBeanPostProcessor#postProcessAfterInstantiation 如果返回false，返回
+     *          2.3.2   autowireByName()
+     *          2.3.3   autowireByType()
+     *          2.3.4   InstantiationAwareBeanPostProcessor.postProcessPropertyValues 进行DI注入
+     *                  2.3.4.1    AutowiredAnnotationBeanPostProcessor (@Autowired、@Value)
+     *                  2.3.4.2    CommonAnnotationBeanPostProcessor (@PostConstruct、@PreDestroy、@Resource)
+     *     2.4. initializeBean()
+     *          2.4.1   invokeAwareMethods()
+     *                  2.4.1.1     BeanNameAware、BeanClassLoaderAware、BeanFactoryAware
+     *                  2.4.1.2     applyBeanPostProcessorsBeforeInitialization() -> BeanPostProcessor#postProcessBeforeInitialization
+     *                  2.4.1.3     invokeInitMethods()
+     *                              2.4.1.3.1   InitializingBean#afterPropertiesSet
+     *                              2.4.1.3.2   invokeCustomInitMethod() 执行自定义init-method
+     *                  2.4.1.4     applyBeanPostProcessorsAfterInitialization() -> BeanPostProcessor#postProcessAfterInitialization
+     *     2.5. registerDisposableBeanIfNecessary() 如果bean实现DisposableBean接口，将bean保存到disposableBeans中，Spring容器关闭时回调
+     */
     private Object createBean(String beanName, RootBeanDefinition bd) {
 
         Class<?> beanClass = bd.getBeanClass();
@@ -186,7 +212,7 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
                     Class<?> type = parameter.getType();
                     Object bean = getBean(type);
                     if (null == bean){
-                        throw new NoSuchBeanDefinitionException("获取bean失败：" + type);
+                        throw new NoSuchBeanException("获取bean失败：" + type);
                     }
 
                     params.add(bean);
