@@ -1,5 +1,8 @@
 package org.spring.framework.core.beans;
 
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -9,9 +12,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * @name DefaultSingletonBeanRegistry
  * @Date 2020/10/20 17:42
  */
+@Slf4j
 public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
 
-    private Map<String, Object> singletonObjects = new ConcurrentHashMap<>();
+    private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>();
+
+    private final Map<String, Object> disposableBeans = new LinkedHashMap();
 
     @Override
     public void registerSingleton(String beanName, Object singletonObject) {
@@ -36,5 +42,23 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
     @Override
     public int getSingletonCount() {
         return singletonObjects.size();
+    }
+
+    public void registerDisposableBean(String beanName, DisposableBean bean) {
+        synchronized (this.disposableBeans) {
+            this.disposableBeans.put(beanName, bean);
+        }
+    }
+
+    public void destroySingletons() {
+
+        log.debug("Destroying singletons in " + this);
+
+        synchronized (this.disposableBeans) {
+            for (final Object value : disposableBeans.values()) {
+                DisposableBean bean = (DisposableBean) value;
+                bean.destroy();
+            }
+        }
     }
 }

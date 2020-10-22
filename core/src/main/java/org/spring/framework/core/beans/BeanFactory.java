@@ -20,4 +20,6 @@ public interface BeanFactory {
 
     void refresh();
 
+    void destroySingletons();
+
 }

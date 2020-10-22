@@ -26,12 +26,15 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
 
     protected final Properties properties;
 
+    private Thread shutdownHook;
+
     public AbstractApplicationContext() {
         BannerPrinter.print();
         ContextLoader.put(this);
+        registerShutdownHook();
         try {
             properties = this.getProperties(defaultPropertiesLocation);
-        } catch (IOException ex){
+        } catch (IOException ex) {
             throw new RuntimeException("unable to load " + defaultPropertiesLocation);
         }
     }
@@ -88,7 +91,8 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
             for (final EventListener observable : list) {
                 try {
                     observable.onEvent(event);
-                } catch (Exception ex){}
+                } catch (Exception ex) {
+                }
             }
         });
     }
@@ -106,5 +110,38 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
     protected abstract BeanFactory getBeanFactory();
 
     protected abstract void refreshBeanFactory();
+
+    public void registerShutdownHook() {
+        if (this.shutdownHook == null) {
+            this.shutdownHook = new Thread() {
+                @Override
+                public void run() {
+                    doClose();
+                }
+            };
+            Runtime.getRuntime().addShutdownHook(this.shutdownHook);
+        }
+    }
+
+    protected void doClose() {
+
+        publish(Event.CLOSEING);
+
+         destroyBeans();
+
+        // closeBeanFactory();
+
+        // onClose();
+
+    }
+
+    protected void destroyBeans() {
+        destroySingletons();
+    }
+
+    @Override
+    public void destroySingletons() {
+        getBeanFactory().destroySingletons();
+    }
 
 }

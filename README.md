@@ -19,7 +19,7 @@ A sample IOC framework like spring, ^^
 * [x] BeanFactoryAware
 * [x] EnvironmentAware
 * [x] ApplicationContextAware
-* [ ] DisposableBean bean销毁
+* [x] DisposableBean bean销毁
 * [x] ApplicationEvent (容器启动完毕事件)
 * [x] CommandLineRunner
 * [ ] 循环依赖

@@ -106,6 +106,11 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
         }
     }
 
+    @Override
+    public void destroySingletons() {
+        super.destroySingletons();
+    }
+
     private Object doCreateBean(String beanName, RootBeanDefinition bd) {
 
         if (bd.getIsFactoryBean()){
@@ -190,7 +195,15 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
         // BeanPostProcessor beanPostAfterInitialization
         bean = beanPostAfterInitialization(bean, beanName);
 
+        registerDisposableBeanIfNecessary(beanName, bean);
+
         return bean;
+    }
+
+    private void registerDisposableBeanIfNecessary(String beanName, Object bean){
+        if (bean instanceof DisposableBean){
+            registerDisposableBean(beanName, (DisposableBean) bean);
+        }
     }
 
     private Object doInstance(Class<?> beanClass){
