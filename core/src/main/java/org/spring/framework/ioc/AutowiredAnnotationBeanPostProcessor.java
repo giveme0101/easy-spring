@@ -82,7 +82,7 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
             String key = annotation.value();
 
             try {
-                String value = stringValueResolver.resolveStringValue(key);
+                String value = getConfigValueOfDefault(key);
                 Assert.notNull(value, "获取配置【" + key + "】失败");
 
                 field.setAccessible(true);
@@ -92,6 +92,16 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
                 e.printStackTrace();
             }
         }
+    }
+
+    private String getConfigValueOfDefault(String key){
+
+        key = key.replace("${", "").replace("}", "");
+        String[] defineKey = key.split(":");
+
+        String value = stringValueResolver.resolveStringValue(defineKey[0]);
+
+        return value == null && defineKey.length == 2 ? defineKey[1] : value;
     }
 
     private String transSetterNameToBeanName(String setterName) {

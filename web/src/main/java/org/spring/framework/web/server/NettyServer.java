@@ -13,9 +13,10 @@ import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.CommandLineRunner;
+import org.spring.framework.core.annotation.Value;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
@@ -24,8 +25,11 @@ import org.spring.framework.core.CommandLineRunner;
  * @Date 2020/10/23 13:24
  */
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class NettyServer implements HttpServer, CommandLineRunner {
+
+    @Value("${server.port:8080}")
+    private String port;
 
     private HttpServerHandler httpServerHandler;
 
@@ -69,6 +73,6 @@ public class NettyServer implements HttpServer, CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        start(8080);
+        start(Integer.valueOf(port));
     }
 }
