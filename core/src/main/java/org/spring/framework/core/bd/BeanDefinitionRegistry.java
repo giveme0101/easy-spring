@@ -1,5 +1,6 @@
 package org.spring.framework.core.bd;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.exception.NoSuchBeanDefinitionException;
 import org.spring.framework.core.util.BeanNameUtil;
@@ -64,7 +65,7 @@ public class BeanDefinitionRegistry {
     }
 
     public static Map<String, RootBeanDefinition> getBeanDefinitionMap() {
-        return new LinkedHashMap<>(beanDefinitionMap);
+        return ImmutableMap.copyOf(beanDefinitionMap);
     }
 
 }

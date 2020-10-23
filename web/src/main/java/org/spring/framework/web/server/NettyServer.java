@@ -34,6 +34,11 @@ public class NettyServer implements HttpServer, CommandLineRunner {
     private final HttpServerHandler httpServerHandler;
 
     @Override
+    public void run(String... args) {
+        start(Integer.valueOf(port));
+    }
+
+    @Override
     public void start(int port) {
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
@@ -71,8 +76,4 @@ public class NettyServer implements HttpServer, CommandLineRunner {
         }
     }
 
-    @Override
-    public void run(String... args) {
-        start(Integer.valueOf(port));
-    }
 }

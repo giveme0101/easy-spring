@@ -4,17 +4,18 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpMethod;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.codec.Charsets;
-import org.spring.framework.core.aware.ApplicationContextAware;
-import org.spring.framework.core.context.ApplicationContext;
+import org.spring.framework.core.aware.BeanFactoryAware;
+import org.spring.framework.core.beans.BeanFactory;
 import org.spring.framework.core.util.BeanNameUtil;
 import org.spring.framework.web.entity.MethodDetail;
+import org.spring.framework.web.exception.UrlNotFoundException;
 import org.spring.framework.web.factory.FullHttpResponseFactory;
 import org.spring.framework.web.factory.ParameterResolverFactory;
-import org.spring.framework.web.factory.RouteMethodMapper;
+import org.spring.framework.web.factory.UrlMethodRouter;
 import org.spring.framework.web.resolver.ParameterResolver;
 import org.spring.framework.web.util.UrlUtil;
 
@@ -28,21 +29,24 @@ import java.util.List;
  * @createTime 2020年09月24日 13:33:00
  **/
 @Slf4j
-@AllArgsConstructor
-public class PostRequestHandler implements RequestHandler, ApplicationContextAware {
+@RequiredArgsConstructor
+public class PostRequestHandler implements RequestHandler, BeanFactoryAware {
 
-    private ApplicationContext applicationContext;
+    private BeanFactory beanFactory;
+    private final UrlMethodRouter urlMethodRouter;
 
     @Override
     public FullHttpResponse handle(FullHttpRequest fullHttpRequest) {
         String requestUri = fullHttpRequest.uri();
         // get http request path，such as "/user"
         String requestPath = UrlUtil.getRequestPath(requestUri);
+
         // get target method
-        MethodDetail methodDetail = RouteMethodMapper.getMethodDetail(requestPath, HttpMethod.POST);
+        MethodDetail methodDetail = urlMethodRouter.getMethod(requestPath, HttpMethod.POST);
         if (methodDetail == null) {
-            return null;
+            throw new UrlNotFoundException("url not found");
         }
+
         Method targetMethod = methodDetail.getMethod();
         String contentType = this.getContentType(fullHttpRequest.headers());
         // target method parameters.
@@ -63,8 +67,13 @@ public class PostRequestHandler implements RequestHandler, ApplicationContextAwa
             throw new IllegalArgumentException("only receive application/json type data");
         }
         String beanName = BeanNameUtil.getBeanName(methodDetail.getMethod().getDeclaringClass());
-        Object targetObject = applicationContext.getBean(beanName);
+        Object targetObject = beanFactory.getBean(beanName);
         return FullHttpResponseFactory.getSuccessResponse(targetMethod, targetMethodParams, targetObject);
+    }
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
     }
 
     private String getContentType(HttpHeaders headers) {
@@ -73,10 +82,6 @@ public class PostRequestHandler implements RequestHandler, ApplicationContextAwa
         return list[0];
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext context) {
-        this.applicationContext = applicationContext;
-    }
 }
 
 

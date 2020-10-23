@@ -17,6 +17,8 @@ public class AnnotationConfigApplicationContext extends AbstractApplicationConte
 
     private BeanDefinitionReader beanDefinitionReader;
 
+    private Class<?>[] configClass;
+
     public AnnotationConfigApplicationContext() {
         super();
         beanDefinitionReader = new BeanDefinitionReader();
@@ -26,6 +28,7 @@ public class AnnotationConfigApplicationContext extends AbstractApplicationConte
 
     @Override
     public ApplicationContext run(Class<?>... configClass) {
+        this.configClass = configClass;
         this.beanDefinitionReader.register(configClass);
         this.refresh();
         return this;
@@ -51,4 +54,7 @@ public class AnnotationConfigApplicationContext extends AbstractApplicationConte
 
     }
 
+    public Class<?>[] getConfigClass() {
+        return configClass;
+    }
 }
