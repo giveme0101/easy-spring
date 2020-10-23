@@ -31,7 +31,7 @@ public class NettyServer implements HttpServer, CommandLineRunner {
     @Value("${server.port:8080}")
     private String port;
 
-    private HttpServerHandler httpServerHandler;
+    private final HttpServerHandler httpServerHandler;
 
     @Override
     public void start(int port) {
