@@ -179,7 +179,7 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
         Class<?> beanClass = bd.getBeanClass();
 
         // 1. 实例化
-        Object bean = doInstance(beanClass);
+        Object bean = createBeanInstance(beanClass);
 
         // aware
         doAwareMethod(bean, beanName, beanClass);
@@ -192,7 +192,7 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
 
         // 3. 初始化
         // InitializationBean -> afterPropertySet
-        init(bean);
+        initializeBean(bean);
 
         // BeanPostProcessor beanPostAfterInitialization
         bean = beanPostAfterInitialization(bean, beanName);
@@ -208,7 +208,7 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
         }
     }
 
-    private Object doInstance(Class<?> beanClass){
+    private Object createBeanInstance(Class<?> beanClass){
 
         if (InstantiationAwareBeanPostProcessor.class.isAssignableFrom(beanClass)) {
             // TODO 调用前置处理器 return postProcessBeforeInstantiation();
@@ -321,7 +321,7 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
         }
     }
 
-    private void init(Object bean) {
+    private void initializeBean(Object bean) {
         if (bean instanceof InitializingBean){
             log.debug("invoke InitializingBean.afterPropertiesSet(): {}", bean);
             ((InitializingBean) bean).afterPropertiesSet();

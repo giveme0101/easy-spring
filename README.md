@@ -12,7 +12,7 @@ A sample IOC framework like spring, ^^
 * [x] @Value (支持.properties/.yml/.yaml配置文件)
 * [x] FactoryBean(getObject(), getObjectType()) (getObject()方法产生的bean无法实现bean的生命周期)
 * [x] InitializingBean
-* [x] [AOP](#AOP)
+* [x] [AOP](#AOP) 需修改为拦截器链实现
 * [x] 拦截器 Interception (暂时无法被Spring管理)
 * [x] 构造器注入(不支持list、map、array等复合类型)
 * [x] BeanNameAware
@@ -22,7 +22,7 @@ A sample IOC framework like spring, ^^
 * [x] DisposableBean bean销毁
 * [x] ApplicationEvent (容器启动完毕事件)
 * [x] CommandLineRunner
-* [ ] 循环依赖
+* [ ] 2级或3级缓存实现循环依赖
 * [ ] Interceptor代理接口， @Autowire/构造器注入 接口的实现报错！
 * [x] @Import (引入外部Bean)
 * [ ] SPI
