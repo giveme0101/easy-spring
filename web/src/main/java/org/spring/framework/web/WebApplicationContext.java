@@ -11,7 +11,7 @@ import org.spring.framework.web.handler.PostRequestHandler;
 import org.spring.framework.web.server.HttpServerHandler;
 import org.spring.framework.web.server.NettyServer;
 
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
@@ -23,7 +23,7 @@ public class WebApplicationContext extends AnnotationConfigApplicationContext {
 
     public WebApplicationContext() {
         super();
-        BeanDefinitionRegistry.putAll(new LinkedHashSet<RootBeanDefinition>(){{
+        BeanDefinitionRegistry.putAll(new HashSet<RootBeanDefinition>(){{
 
             add(BeanDefinitionParser.parse(UrlMethodRouter.class));
             add(BeanDefinitionParser.parse(RequestHandlerResolver.class));
