@@ -14,6 +14,7 @@ import java.lang.reflect.Parameter;
  * @createTime 2020年09月27日 20:58:00
  **/
 public class RequestParamParameterResolver implements ParameterResolver {
+
     @Override
     public Object resolve(MethodDetail methodDetail, Parameter parameter) {
         RequestParam requestParam = parameter.getDeclaredAnnotation(RequestParam.class);

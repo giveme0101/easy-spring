@@ -4,16 +4,18 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.QueryStringDecoder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.CharEncoding;
 import org.apache.commons.codec.Charsets;
-import org.spring.framework.core.aware.ApplicationContextAware;
-import org.spring.framework.core.context.ApplicationContext;
+import org.spring.framework.core.aware.BeanFactoryAware;
+import org.spring.framework.core.beans.BeanFactory;
 import org.spring.framework.core.util.BeanNameUtil;
 import org.spring.framework.web.entity.MethodDetail;
+import org.spring.framework.web.exception.UrlNotFoundException;
 import org.spring.framework.web.factory.FullHttpResponseFactory;
 import org.spring.framework.web.factory.ParameterResolverFactory;
-import org.spring.framework.web.factory.RouteMethodMapper;
+import org.spring.framework.web.factory.UrlMethodRouter;
 import org.spring.framework.web.resolver.ParameterResolver;
 import org.spring.framework.web.util.UrlUtil;
 
@@ -31,28 +33,34 @@ import java.util.Map;
  * @createTime 2020年09月24日 13:33:00
  **/
 @Slf4j
-public class GetRequestHandler implements RequestHandler, ApplicationContextAware {
+@RequiredArgsConstructor
+public class GetRequestHandler implements RequestHandler, BeanFactoryAware {
 
-    private ApplicationContext applicationContext;
+    private BeanFactory beanFactory;
+    private final UrlMethodRouter urlMethodRouter;
 
     @Override
     public FullHttpResponse handle(FullHttpRequest fullHttpRequest) {
+
         String requestUri = fullHttpRequest.uri();
         Map<String, String> queryParameterMappings = getQueryParams(requestUri);
         // get http request path，such as "/user"
         String requestPath = UrlUtil.getRequestPath(requestUri);
         // get target method
-        MethodDetail methodDetail = RouteMethodMapper.getMethodDetail(requestPath, HttpMethod.GET);
+        MethodDetail methodDetail = urlMethodRouter.getMethod(requestPath, HttpMethod.GET);
         if (methodDetail == null) {
-            return null;
+            throw new UrlNotFoundException("url not found");
         }
+
         methodDetail.setQueryParameterMappings(queryParameterMappings);
         Method targetMethod = methodDetail.getMethod();
         if (targetMethod == null) {
-            return null;
+            throw new UrlNotFoundException("url not found");
         }
-        log.info("requestPath -> target method [{}]", targetMethod.getName());
+
+        log.debug("requestPath -> target method [{}]", targetMethod.getName());
         Parameter[] targetMethodParameters = targetMethod.getParameters();
+
         // target method parameters.
         // notice! you should convert it to array when pass into the executeMethod method
         List<Object> targetMethodParams = new ArrayList<>();
@@ -63,8 +71,10 @@ public class GetRequestHandler implements RequestHandler, ApplicationContextAwar
                 targetMethodParams.add(param);
             }
         }
+
         String beanName = BeanNameUtil.getBeanName(methodDetail.getMethod().getDeclaringClass());
-        Object targetObject = applicationContext.getBean(beanName);
+        Object targetObject = beanFactory.getBean(beanName);
+
         return FullHttpResponseFactory.getSuccessResponse(targetMethod, targetMethodParams, targetObject);
     }
 
@@ -84,7 +94,8 @@ public class GetRequestHandler implements RequestHandler, ApplicationContextAwar
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext context) {
-        this.applicationContext = context;
+    public void setBeanFactory(BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
     }
+
 }
