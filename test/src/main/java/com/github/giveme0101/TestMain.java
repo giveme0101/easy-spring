@@ -29,7 +29,8 @@ public class TestMain {
 
     public static void main(String[] args) {
 
-        ApplicationContext context = new AnnotationConfigApplicationContext(TestMain.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext();
+        context.run(TestMain.class);
 
         IOrderService orderService = context.getBean(IOrderService.class);
 

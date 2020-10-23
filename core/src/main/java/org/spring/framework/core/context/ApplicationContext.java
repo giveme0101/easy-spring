@@ -7,4 +7,6 @@ public interface ApplicationContext extends BeanFactory, ApplicationEventPublish
 
     void close();
 
+    ApplicationContext run(Class<?>... configClass);
+
 }

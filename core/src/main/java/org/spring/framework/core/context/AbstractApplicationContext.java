@@ -2,7 +2,10 @@ package org.spring.framework.core.context;
 
 import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.CommandLineRunner;
+import org.spring.framework.core.bd.BeanDefinitionRegistry;
+import org.spring.framework.core.bd.RootBeanDefinition;
 import org.spring.framework.core.beans.BeanFactory;
+import org.spring.framework.core.beans.DefaultListableBeanFactory;
 import org.spring.framework.core.event.Event;
 import org.spring.framework.core.event.EventListener;
 import org.spring.framework.core.util.BannerPrinter;
@@ -18,6 +21,8 @@ import java.util.*;
  */
 @Slf4j
 public abstract class AbstractApplicationContext implements ApplicationContext {
+
+    private static final String BEAN_NAME = "applicationContext";
 
     protected List<EventListener> eventObservableList = new ArrayList<>();
 
@@ -112,6 +117,15 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
     @Override
     public void destroySingletons() {
         getBeanFactory().destroySingletons();
+    }
+
+    protected BeanFactory createBeanFactory(){
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory(this);
+        beanFactory.registerSingleton(BEAN_NAME, this);
+        RootBeanDefinition rootBeanDefinition = new RootBeanDefinition();
+        rootBeanDefinition.setBeanClass(ApplicationContext.class);
+        BeanDefinitionRegistry.put(BEAN_NAME, rootBeanDefinition);
+        return beanFactory;
     }
 
 }
