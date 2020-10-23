@@ -2,6 +2,7 @@ package org.spring.framework.core.context;
 
 import org.spring.framework.core.bd.BeanDefinitionReader;
 import org.spring.framework.core.bd.BeanDefinitionRegistry;
+import org.spring.framework.core.bd.RootBeanDefinition;
 import org.spring.framework.core.beans.BeanFactory;
 import org.spring.framework.core.beans.DefaultListableBeanFactory;
 import org.spring.framework.core.config.AnnotationConfigLoader;
@@ -14,14 +15,16 @@ import org.spring.framework.core.config.AnnotationConfigLoader;
  */
 public class AnnotationConfigApplicationContext extends AbstractApplicationContext {
 
+    private BeanFactory beanFactory;
+
     private BeanDefinitionReader beanDefinitionReader;
 
-    private BeanFactory beanFactory;
+    private static final String BEAN_NAME = "applicationContext";
 
     public AnnotationConfigApplicationContext(Class<?>... configClass) {
         super();
         beanDefinitionReader = new BeanDefinitionReader();
-        this.beanFactory = new DefaultListableBeanFactory(this);
+        beanFactory = createBeanFactory();
         BeanDefinitionRegistry.putAll(AnnotationConfigLoader.registerAnnotationConfigClass());
         this.beanDefinitionReader.register(configClass);
         this.refresh();
@@ -46,4 +49,14 @@ public class AnnotationConfigApplicationContext extends AbstractApplicationConte
     public void close() {
 
     }
+
+    private BeanFactory createBeanFactory(){
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory(this);
+        beanFactory.registerSingleton(BEAN_NAME, this);
+        RootBeanDefinition rootBeanDefinition = new RootBeanDefinition();
+        rootBeanDefinition.setBeanClass(ApplicationContext.class);
+        BeanDefinitionRegistry.put(BEAN_NAME, rootBeanDefinition);
+        return beanFactory;
+    }
+
 }

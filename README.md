@@ -17,9 +17,9 @@ A sample IOC framework like spring, ^^
 * [x] 构造器注入(不支持list、map、array等复合类型)
 * [x] BeanNameAware
 * [x] BeanFactoryAware
-* [x] ResourceAware
-* [x] ApplicationContextAware
-* [x] DisposableBean bean销毁
+* [x] EmbeddedValueResolverAware (ApplicationContextProcessor#postProcessBeforeInitialization)
+* [x] ApplicationContextAware    (ApplicationContextProcessor#postProcessBeforeInitialization)
+* [x] DisposableBean
 * [x] ApplicationEvent (容器启动完毕事件)
 * [x] CommandLineRunner
 * [ ] 2级或3级缓存实现循环依赖

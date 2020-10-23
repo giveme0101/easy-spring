@@ -5,15 +5,15 @@ import org.spring.framework.core.InstantiationAwareBeanPostProcessor;
 import org.spring.framework.core.annotation.Autowired;
 import org.spring.framework.core.annotation.Value;
 import org.spring.framework.core.aware.BeanFactoryAware;
-import org.spring.framework.core.aware.ResourceAware;
 import org.spring.framework.core.beans.BeanFactory;
 import org.spring.framework.core.beans.PropertyValues;
+import org.spring.framework.core.config.EmbeddedValueResolverAware;
+import org.spring.framework.core.config.StringValueResolver;
 import org.spring.framework.core.util.Assert;
 import org.spring.framework.core.util.EscapeUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Map;
 
 /**
  * @Author kevin xiajun94@FoxMail.com
@@ -23,10 +23,10 @@ import java.util.Map;
  * @Date 2020/10/13 14:04
  */
 @Slf4j
-public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareBeanPostProcessor, BeanFactoryAware, ResourceAware {
+public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareBeanPostProcessor, BeanFactoryAware, EmbeddedValueResolverAware {
 
     private BeanFactory beanFactory;
-    private Map<String, String> resources;
+    private StringValueResolver stringValueResolver;
 
     @Override
     public PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName) {
@@ -82,7 +82,7 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
             String key = annotation.value();
 
             try {
-                String value = resources.get(key);
+                String value = stringValueResolver.resolveStringValue(key);
                 Assert.notNull(value, "获取配置【" + key + "】失败");
 
                 field.setAccessible(true);
@@ -116,7 +116,7 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
     }
 
     @Override
-    public void setResources(Map<String, String> resources) {
-        this.resources = resources;
+    public void setEmbeddedValueResolver(StringValueResolver resolver) {
+        this.stringValueResolver = resolver;
     }
 }

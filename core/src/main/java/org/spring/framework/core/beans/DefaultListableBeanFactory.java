@@ -4,19 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.BeanPostProcessor;
 import org.spring.framework.core.InitializingBean;
 import org.spring.framework.core.InstantiationAwareBeanPostProcessor;
-import org.spring.framework.core.aware.ApplicationContextAware;
 import org.spring.framework.core.aware.BeanFactoryAware;
 import org.spring.framework.core.aware.BeanNameAware;
-import org.spring.framework.core.aware.ResourceAware;
 import org.spring.framework.core.bd.BeanDefinitionRegistry;
 import org.spring.framework.core.bd.RootBeanDefinition;
-import org.spring.framework.core.config.ResourceManager;
 import org.spring.framework.core.context.ApplicationContext;
 import org.spring.framework.core.util.AnnotationAwareOrderComparator;
 import org.spring.framework.core.util.Assert;
 import org.spring.framework.core.util.BeanNameUtil;
 
-import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -231,10 +227,6 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
                 instance = constructor.newInstance(params.toArray());
             }
 
-            if (InstantiationAwareBeanPostProcessor.class.isAssignableFrom(beanClass)) {
-                // TODO 调用后置处理器 return postProcessAfterInstantiation();
-            }
-
             Assert.notNull(instance, "创建bean失败：构造器注入失败");
             return instance;
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException | IllegalArgumentException e) {
@@ -262,8 +254,9 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
             AnnotationAwareOrderComparator.sort(beanPostProcessors);
 
             for (final BeanPostProcessor processor : beanPostProcessors) {
+                // 判断有无要处理的后置处理器
                 if (processor instanceof InstantiationAwareBeanPostProcessor){
-                    if (!((InstantiationAwareBeanPostProcessor)processor).postProcessAfterInstantiation(bean, beanName)) {
+                    if (!((InstantiationAwareBeanPostProcessor) processor).postProcessAfterInstantiation(bean, beanName)) {
                         continueWithPropertyPopulation = false;
                         break;
                     }
@@ -275,6 +268,7 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
             }
 
             for (final BeanPostProcessor processor : beanPostProcessors) {
+                // 执行后置处理器，进行属性注入
                 if (processor instanceof InstantiationAwareBeanPostProcessor) {
                     pvs = ((InstantiationAwareBeanPostProcessor) processor).postProcessPropertyValues(pvs, bean, BeanNameUtil.getBeanName(bd));
                 }
@@ -289,27 +283,13 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
     }
 
     private void doAwareMethod(Object bean, String beanName, Class<?> beanClass) {
-        if (bean instanceof ApplicationContextAware){
-            log.debug("ApplicationContextAware: {}", beanClass.getName());
-            ((ApplicationContextAware) bean).setApplicationContext(applicationContext);
-        }
-        if (bean instanceof BeanFactoryAware){
-            log.debug("BeanFactoryAware: {}", beanClass.getName());
-            ((BeanFactoryAware) bean).setBeanFactory(this);
-        }
         if (bean instanceof BeanNameAware){
             log.debug("BeanNameAware: {}", beanClass.getName());
             ((BeanNameAware) bean).setBeanName(beanName);
         }
-        if (bean instanceof ResourceAware){
-            log.debug("ResourceAware: {}", beanClass.getName());
-            try {
-                ResourceManager resourceManager = getBean(ResourceManager.class);
-                ((ResourceAware) bean).setResources(resourceManager.loadProperties());
-            } catch (IOException ex){
-                log.error(ex.getMessage(), ex);
-                System.exit(-1);
-            }
+        if (bean instanceof BeanFactoryAware){
+            log.debug("BeanFactoryAware: {}", beanClass.getName());
+            ((BeanFactoryAware) bean).setBeanFactory(this);
         }
     }
 
