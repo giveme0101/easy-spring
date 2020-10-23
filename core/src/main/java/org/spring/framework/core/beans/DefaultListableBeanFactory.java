@@ -4,19 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.BeanPostProcessor;
 import org.spring.framework.core.InitializingBean;
 import org.spring.framework.core.InstantiationAwareBeanPostProcessor;
-import org.spring.framework.core.aware.ApplicationContextAware;
 import org.spring.framework.core.aware.BeanFactoryAware;
 import org.spring.framework.core.aware.BeanNameAware;
-import org.spring.framework.core.aware.ResourceAware;
 import org.spring.framework.core.bd.BeanDefinitionRegistry;
 import org.spring.framework.core.bd.RootBeanDefinition;
-import org.spring.framework.core.config.ResourceManager;
 import org.spring.framework.core.context.ApplicationContext;
-import org.spring.framework.core.exception.NoSuchBeanException;
 import org.spring.framework.core.util.AnnotationAwareOrderComparator;
+import org.spring.framework.core.util.Assert;
 import org.spring.framework.core.util.BeanNameUtil;
 
-import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -43,18 +39,18 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
         }
 
         if (beanDefinition.getIsPrototype()) {
-            return doCreateBean(beanName, beanDefinition);
+            return createBean(beanName, beanDefinition);
         }
 
         if (beanDefinition.getIsLazyInit()) {
-            Object bean = doCreateBean(beanName, beanDefinition);
+            Object bean = createBean(beanName, beanDefinition);
             this.registerSingleton(beanName, bean);
             return bean;
         }
 
         Object bean = this.getSingleton(beanName);
         if (null == bean){
-           return doCreateBean(beanName, beanDefinition);
+           return createBean(beanName, beanDefinition);
         }
 
         return bean;
@@ -103,7 +99,7 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
                 continue;
             }
 
-            Object bean = doCreateBean(beanName, bd);
+            Object bean = createBean(beanName, bd);
             this.registerSingleton(beanName, bean);
         }
     }
@@ -113,7 +109,7 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
         super.destroySingletons();
     }
 
-    private Object doCreateBean(String beanName, RootBeanDefinition bd) {
+    private Object createBean(String beanName, RootBeanDefinition bd) {
 
         if (bd.getIsFactoryBean()){
 
@@ -125,7 +121,7 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
 
             // 创建工厂bean
             String factoryBeanName = FactoryBean.BEAN_NAME_PREFIX + productBeanName;
-            FactoryBean factoryBean = (FactoryBean) createBean(factoryBeanName, bd);
+            FactoryBean factoryBean = (FactoryBean) doCreateBean(factoryBeanName, bd);
             BeanDefinitionRegistry.put(factoryBeanName, bd);
             this.registerSingleton(factoryBeanName, factoryBean);
 
@@ -140,7 +136,7 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
 
             return factoryBean;
         } else {
-            Object bean = createBean(beanName, bd);
+            Object bean = doCreateBean(beanName, bd);
             if (bean instanceof BeanPostProcessor){
                 this.addBeanPostProcessor((BeanPostProcessor) bean);
             }
@@ -174,29 +170,18 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
      *                  2.4.1.4     applyBeanPostProcessorsAfterInitialization() -> BeanPostProcessor#postProcessAfterInitialization
      *     2.5. registerDisposableBeanIfNecessary() 如果bean实现DisposableBean接口，将bean保存到disposableBeans中，Spring容器关闭时回调
      */
-    private Object createBean(String beanName, RootBeanDefinition bd) {
-
-        Class<?> beanClass = bd.getBeanClass();
+    private Object doCreateBean(String beanName, RootBeanDefinition bd) {
 
         // 1. 实例化
-        Object bean = createBeanInstance(beanClass);
-
-        // aware
-        doAwareMethod(bean, beanName, beanClass);
+        Object bean = createBeanInstance(bd);
 
         // 2. 设置属性
         populateBean(beanName, bd, bean);
 
-        // BeanPostProcessor beanPostBeforeInitialization
-        bean = beanPostBeforeInitialization(bean, beanName);
-
         // 3. 初始化
-        // InitializationBean -> afterPropertySet
-        initializeBean(bean);
+        bean = initializeBean(beanName, bean);
 
-        // BeanPostProcessor beanPostAfterInitialization
-        bean = beanPostAfterInitialization(bean, beanName);
-
+        // 4. 注册bean销毁方法
         registerDisposableBeanIfNecessary(beanName, bean);
 
         return bean;
@@ -208,7 +193,9 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
         }
     }
 
-    private Object createBeanInstance(Class<?> beanClass){
+    private Object createBeanInstance(RootBeanDefinition bd){
+
+        Class beanClass = bd.getBeanClass();
 
         if (InstantiationAwareBeanPostProcessor.class.isAssignableFrom(beanClass)) {
             // TODO 调用前置处理器 return postProcessBeforeInstantiation();
@@ -230,7 +217,8 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
                     Class<?> type = parameter.getType();
                     Object bean = getBean(type);
                     if (null == bean){
-                        throw new NoSuchBeanException("获取bean失败：" + type);
+                        log.warn("获取bean【{}】失败, 执行下一构造方法", type);
+                        continue;
                     }
 
                     params.add(bean);
@@ -239,10 +227,7 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
                 instance = constructor.newInstance(params.toArray());
             }
 
-            if (InstantiationAwareBeanPostProcessor.class.isAssignableFrom(beanClass)) {
-                // TODO 调用后置处理器 return postProcessAfterInstantiation();
-            }
-
+            Assert.notNull(instance, "创建bean失败：构造器注入失败");
             return instance;
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException | IllegalArgumentException e) {
             e.printStackTrace();
@@ -252,6 +237,9 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
     }
 
     private void populateBean(String beanName, RootBeanDefinition bd, Object bean) {
+
+        // aware
+        doAwareMethod(bean, beanName, bd.getBeanClass());
 
         // 设置属性
         // NOP
@@ -266,8 +254,9 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
             AnnotationAwareOrderComparator.sort(beanPostProcessors);
 
             for (final BeanPostProcessor processor : beanPostProcessors) {
+                // 判断有无要处理的后置处理器
                 if (processor instanceof InstantiationAwareBeanPostProcessor){
-                    if (!((InstantiationAwareBeanPostProcessor)processor).postProcessAfterInstantiation(bean, beanName)) {
+                    if (!((InstantiationAwareBeanPostProcessor) processor).postProcessAfterInstantiation(bean, beanName)) {
                         continueWithPropertyPopulation = false;
                         break;
                     }
@@ -279,6 +268,7 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
             }
 
             for (final BeanPostProcessor processor : beanPostProcessors) {
+                // 执行后置处理器，进行属性注入
                 if (processor instanceof InstantiationAwareBeanPostProcessor) {
                     pvs = ((InstantiationAwareBeanPostProcessor) processor).postProcessPropertyValues(pvs, bean, BeanNameUtil.getBeanName(bd));
                 }
@@ -292,54 +282,35 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
         }
     }
 
-    private void applyPropertyValues(String beanName, RootBeanDefinition bd, Object bean){
-        // NOP
-    }
-
     private void doAwareMethod(Object bean, String beanName, Class<?> beanClass) {
-        if (bean instanceof ApplicationContextAware){
-            log.debug("ApplicationContextAware: {}", beanClass.getName());
-            ((ApplicationContextAware) bean).setApplicationContext(applicationContext);
+        if (bean instanceof BeanNameAware){
+            log.debug("BeanNameAware: {}", beanClass.getName());
+            ((BeanNameAware) bean).setBeanName(beanName);
         }
         if (bean instanceof BeanFactoryAware){
             log.debug("BeanFactoryAware: {}", beanClass.getName());
             ((BeanFactoryAware) bean).setBeanFactory(this);
         }
-        if (bean instanceof BeanNameAware){
-            log.debug("BeanNameAware: {}", beanClass.getName());
-            ((BeanNameAware) bean).setBeanName(beanName);
-        }
-        if (bean instanceof ResourceAware){
-            log.debug("ResourceAware: {}", beanClass.getName());
-            try {
-                ResourceManager resourceManager = getBean(ResourceManager.class);
-                ((ResourceAware) bean).setResources(resourceManager.loadProperties());
-            } catch (IOException ex){
-                log.error(ex.getMessage(), ex);
-                System.exit(-1);
-            }
-        }
     }
 
-    private void initializeBean(Object bean) {
+    private void applyPropertyValues(String beanName, RootBeanDefinition bd, Object bean){
+        // NOP
+    }
+
+    private Object initializeBean(String beanName, Object bean) {
+
+        // BeanPostProcessor beanPostBeforeInitialization
+        bean = beanPostBeforeInitialization(bean, beanName);
+
         if (bean instanceof InitializingBean){
             log.debug("invoke InitializingBean.afterPropertiesSet(): {}", bean);
             ((InitializingBean) bean).afterPropertiesSet();
         }
-    }
 
-    private Object beanPostAfterInitialization(Object bean, String beanName) {
+        // BeanPostProcessor beanPostAfterInitialization
+        bean = beanPostAfterInitialization(bean, beanName);
 
-        Object postBean = bean;
-
-        List<BeanPostProcessor> beanPostProcessors = getBeanPostProcessors();
-        AnnotationAwareOrderComparator.sort(beanPostProcessors);
-
-        for (final BeanPostProcessor postProcessor : beanPostProcessors) {
-            postBean = postProcessor.postProcessAfterInitialization(postBean, beanName);
-        }
-
-        return postBean;
+        return bean;
     }
 
     private Object beanPostBeforeInitialization(Object bean, String beanName) {
@@ -351,6 +322,20 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
 
         for (final BeanPostProcessor postProcessor : beanPostProcessors) {
             postBean = postProcessor.postProcessBeforeInitialization(postBean, beanName);
+        }
+
+        return postBean;
+    }
+
+    private Object beanPostAfterInitialization(Object bean, String beanName) {
+
+        Object postBean = bean;
+
+        List<BeanPostProcessor> beanPostProcessors = getBeanPostProcessors();
+        AnnotationAwareOrderComparator.sort(beanPostProcessors);
+
+        for (final BeanPostProcessor postProcessor : beanPostProcessors) {
+            postBean = postProcessor.postProcessAfterInitialization(postBean, beanName);
         }
 
         return postBean;

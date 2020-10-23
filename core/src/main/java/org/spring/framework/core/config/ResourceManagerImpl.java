@@ -2,6 +2,7 @@ package org.spring.framework.core.config;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
+import org.spring.framework.core.InitializingBean;
 import org.spring.framework.core.config.resource.ResourceLoader;
 import org.spring.framework.core.config.resource.PropertiesLoader;
 import org.spring.framework.core.config.resource.YmlLoader;
@@ -19,7 +20,7 @@ import java.util.Map;
  * @Date 2020/10/22 15:15
  */
 @Slf4j
-public class ResourceManagerImpl implements ResourceManager {
+public class ResourceManagerImpl implements ResourceManager, InitializingBean {
 
     private Map<String, String> resourcesProperties = new HashMap<>();
 
@@ -47,5 +48,20 @@ public class ResourceManagerImpl implements ResourceManager {
         }
 
         return ImmutableMap.copyOf(resourcesProperties);
+    }
+
+    @Override
+    public String resolveStringValue(String strVal) {
+        return resourcesProperties.get(strVal);
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        try {
+            loadProperties();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            System.exit(-1);
+        }
     }
 }

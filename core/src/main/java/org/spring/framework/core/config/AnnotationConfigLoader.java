@@ -3,6 +3,7 @@ package org.spring.framework.core.config;
 import org.spring.framework.aop.AopProxyBeanPostProcessor;
 import org.spring.framework.core.bd.BeanDefinitionParser;
 import org.spring.framework.core.bd.RootBeanDefinition;
+import org.spring.framework.core.context.ApplicationContextProcessor;
 import org.spring.framework.core.event.EventBeanPostProcessor;
 import org.spring.framework.ioc.AutowiredAnnotationBeanPostProcessor;
 import org.spring.framework.ioc.CommonAnnotationBeanPostProcessor;
@@ -27,6 +28,8 @@ public class AnnotationConfigLoader {
       */
     public static Set<RootBeanDefinition> registerAnnotationConfigClass(){
         return new LinkedHashSet<RootBeanDefinition>(){{
+
+            add(BeanDefinitionParser.parse(ApplicationContextProcessor.class));
 
             add(BeanDefinitionParser.parse(ResourceManagerImpl.class));
 
