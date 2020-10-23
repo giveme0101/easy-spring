@@ -28,6 +28,7 @@
         <reflections.version>0.9.9-RC2</reflections.version>
         <cglib.version>3.3.0</cglib.version>
         <yaml.version>1.23</yaml.version>
+        <netty.version>4.1.53.Final</netty.version>
     </properties>
 
     <dependencies>
@@ -74,6 +75,11 @@
                 <groupId>org.yaml</groupId>
                 <artifactId>snakeyaml</artifactId>
                 <version>${yaml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

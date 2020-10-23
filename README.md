@@ -2,7 +2,7 @@
 A sample IOC framework like spring, ^^
 
 
-## TODO LIST
+## CORE
 
 * [x] @ComponentScan
 * [x] @Component
@@ -29,6 +29,12 @@ A sample IOC framework like spring, ^^
 * [x] @Ordered
 * [x] @Transactional -> TransactionalAnnotationBeanPostProcessor
 
+## web
+
+* [x] @RestController
+* [x] Netty
+
+
 ### AOP 
 ```
 1. 通过BeanPostProcessor实现
@@ -38,3 +44,5 @@ A sample IOC framework like spring, ^^
                 -> CglibAopProxy
                 -> JdkAopProxy
 ```
+
+## 注：interceptor、web的解析HTTP请求、分发等功能源自 [JsonCat](https://github.com/Snailclimb/jsoncat)

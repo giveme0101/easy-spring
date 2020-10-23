@@ -19,6 +19,10 @@ public class BeanNameUtil {
         return EscapeUtil.firstCharLowerCase(bd.getBeanClass().getSimpleName());
     }
 
+    public static String getBeanName(Class clazz){
+        return EscapeUtil.firstCharLowerCase(clazz.getSimpleName());
+    }
+
     public static String getFactoryBeanProductBeanName(RootBeanDefinition bd){
 
         Class beanClass = bd.getBeanClass();
