@@ -1,4 +1,6 @@
-package org.spring.framework.core.config;
+package org.spring.framework.core.aware;
+
+import org.spring.framework.core.config.StringValueResolver;
 
 /**
  * @Author kevin xiajun94@FoxMail.com

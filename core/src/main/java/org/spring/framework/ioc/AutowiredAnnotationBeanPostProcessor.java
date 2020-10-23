@@ -7,7 +7,7 @@ import org.spring.framework.core.annotation.Value;
 import org.spring.framework.core.aware.BeanFactoryAware;
 import org.spring.framework.core.beans.BeanFactory;
 import org.spring.framework.core.beans.PropertyValues;
-import org.spring.framework.core.config.EmbeddedValueResolverAware;
+import org.spring.framework.core.aware.EmbeddedValueResolverAware;
 import org.spring.framework.core.config.StringValueResolver;
 import org.spring.framework.core.util.Assert;
 import org.spring.framework.core.util.EscapeUtil;

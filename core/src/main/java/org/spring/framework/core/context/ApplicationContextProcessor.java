@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.core.BeanPostProcessor;
 import org.spring.framework.core.aware.ApplicationContextAware;
 import org.spring.framework.core.beans.BeanFactory;
-import org.spring.framework.core.config.EmbeddedValueResolverAware;
+import org.spring.framework.core.aware.EmbeddedValueResolverAware;
 import org.spring.framework.core.config.ResourceManager;
 import org.spring.framework.core.config.StringValueResolver;
 
