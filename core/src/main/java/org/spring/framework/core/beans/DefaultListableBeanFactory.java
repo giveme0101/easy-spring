@@ -267,8 +267,9 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
                 return;
             }
 
-            for (final BeanPostProcessor processor : beanPostProcessors) {
-                // 执行后置处理器，进行属性注入
+            // 执行后置处理器，进行属性注入
+            for (int i = 0; i < beanPostProcessors.size(); i++) {
+                BeanPostProcessor processor = beanPostProcessors.get(i);
                 if (processor instanceof InstantiationAwareBeanPostProcessor) {
                     pvs = ((InstantiationAwareBeanPostProcessor) processor).postProcessPropertyValues(pvs, bean, BeanNameUtil.getBeanName(bd));
                 }
@@ -320,7 +321,8 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
         List<BeanPostProcessor> beanPostProcessors = getBeanPostProcessors();
         AnnotationAwareOrderComparator.sort(beanPostProcessors);
 
-        for (final BeanPostProcessor postProcessor : beanPostProcessors) {
+        for (int i = 0; i < beanPostProcessors.size(); i++) {
+            BeanPostProcessor postProcessor = beanPostProcessors.get(i);
             postBean = postProcessor.postProcessBeforeInitialization(postBean, beanName);
         }
 
@@ -334,7 +336,8 @@ public class DefaultListableBeanFactory extends AbstractBeanFactory {
         List<BeanPostProcessor> beanPostProcessors = getBeanPostProcessors();
         AnnotationAwareOrderComparator.sort(beanPostProcessors);
 
-        for (final BeanPostProcessor postProcessor : beanPostProcessors) {
+        for (int i = 0; i < beanPostProcessors.size(); i++) {
+            BeanPostProcessor postProcessor = beanPostProcessors.get(i);
             postBean = postProcessor.postProcessAfterInitialization(postBean, beanName);
         }
 

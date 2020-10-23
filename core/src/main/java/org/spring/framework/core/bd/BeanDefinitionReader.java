@@ -11,6 +11,7 @@ import java.io.File;
 import java.lang.annotation.Annotation;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -65,7 +66,12 @@ public class BeanDefinitionReader {
         // 扫描其他bean
         try {
             String abstractPath = basePackage.replace(".", "/");
-            URI uri = classLoader.getResource(abstractPath).toURI();
+            URL resource = classLoader.getResource(abstractPath);
+            if (null == resource){
+                return;
+            }
+
+            URI uri = resource.toURI();
 
             File file = new File(uri);
             if (file.isDirectory()){

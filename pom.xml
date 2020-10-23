@@ -11,11 +11,13 @@
 
     <modules>
         <module>core</module>
+        <module>web</module>
         <module>test</module>
     </modules>
 
     <properties>
         <spring.core.version>1.0.0-SNAPSHOT</spring.core.version>
+        <spring.web.version>1.0.0-SNAPSHOT</spring.web.version>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -26,6 +28,7 @@
         <reflections.version>0.9.9-RC2</reflections.version>
         <cglib.version>3.3.0</cglib.version>
         <yaml.version>1.23</yaml.version>
+        <netty.version>4.1.53.Final</netty.version>
     </properties>
 
     <dependencies>
@@ -54,6 +57,11 @@
                 <version>${spring.core.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.spring.framework</groupId>
+                <artifactId>web</artifactId>
+                <version>${spring.web.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
                 <version>${reflections.version}</version>
@@ -67,6 +75,11 @@
                 <groupId>org.yaml</groupId>
                 <artifactId>snakeyaml</artifactId>
                 <version>${yaml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
