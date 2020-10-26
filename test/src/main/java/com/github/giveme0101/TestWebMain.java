@@ -1,10 +1,9 @@
 package com.github.giveme0101;
 
 import com.github.convert.BeanConverter;
+import org.spring.framework.SpringApplication;
 import org.spring.framework.core.annotation.ComponentScan;
 import org.spring.framework.core.annotation.Import;
-import org.spring.framework.core.context.AnnotationConfigApplicationContext;
-import org.spring.framework.core.context.ApplicationContext;
 import org.spring.framework.web.annotation.EnableWebMVC;
 
 /**
@@ -26,8 +25,7 @@ public class TestWebMain {
 
     public static void main(String[] args) {
 
-        ApplicationContext context = new AnnotationConfigApplicationContext();
-        context.run(TestWebMain.class);
+        SpringApplication.run(TestWebMain.class, args);
 
     }
 
