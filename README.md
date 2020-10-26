@@ -45,8 +45,12 @@ A sample IOC framework like spring, ^^
 ```
 
 * [x] @RestController
+* [x] @GetMapping
+* [x] @PostMapping
+* [x] @PathVariable
+* [x] @RequestParam
+* [x] @RequestBody
 * [x] Netty
-
 
 ### AOP 
 ```
@@ -58,4 +62,4 @@ A sample IOC framework like spring, ^^
                 -> JdkAopProxy
 ```
 
-## 注：interceptor、web的解析HTTP请求、分发等功能源自 [JsonCat](https://github.com/Snailclimb/jsoncat)
+## 注：interceptor、webmvc等部分功能参考自 [JsonCat](https://github.com/Snailclimb/jsoncat)
