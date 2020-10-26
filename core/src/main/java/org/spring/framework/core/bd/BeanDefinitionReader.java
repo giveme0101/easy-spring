@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.spring.framework.aop.InterceptorFactory;
 import org.spring.framework.core.annotation.Component;
 import org.spring.framework.core.annotation.ComponentScan;
-import org.spring.framework.core.beans.ImportClassImporter;
+import org.spring.framework.core.beans.ImportClassLoader;
 import org.spring.framework.core.util.ClassScanner;
 import org.spring.framework.core.util.EscapeUtil;
 
@@ -34,16 +34,18 @@ public class BeanDefinitionReader {
         }
     }
 
-    private void scan(Class<?> configClass){
+    private void scan(Class<?> configClass) {
 
-        String configPackage = configClass.getPackage().getName();
-        doScan(configPackage);
+        // 扫描@Import
+        ImportClassLoader.loadClass(configClass);
 
+        // 扫描@ComponentScan
         if (configClass.isAnnotationPresent(ComponentScan.class)) {
 
             ComponentScan componentScan = configClass.getAnnotation(ComponentScan.class);
             String[] basePackages = componentScan.basePackage();
 
+            // 加载包下的interceptor拦截器
             InterceptorFactory.loadInterceptors(basePackages);
 
             for (final String basePackage : basePackages) {
@@ -54,10 +56,10 @@ public class BeanDefinitionReader {
 
     private void doScan(String basePackage){
 
-        // 扫描Interceptor
-        ImportClassImporter.importClass(basePackage);
+        // 加载包下的@Import
+        ImportClassLoader.loadPackage(basePackage);
 
-        // 扫描其他bean
+        // @Component、@Service等
         ClassScanner.scan(basePackage, (clazz) -> {
 
             Class beanClass = (Class) clazz;

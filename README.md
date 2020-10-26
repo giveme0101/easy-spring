@@ -39,9 +39,8 @@ A sample IOC framework like spring, ^^
 或 
     1.
         配置类添加@EnableWebMvc注解    
-    2.
-        ApplicationContext context = new AnnotationConfigApplicationContext();
-        context.run(config.class);
+    2. 
+        SpringApplication.run(config.class, args);
 ```
 
 * [x] @RestController

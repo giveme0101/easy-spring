@@ -4,9 +4,9 @@ import com.github.convert.BeanConverter;
 import com.github.giveme0101.entity.Order;
 import com.github.giveme0101.entity.OrderStatusEnum;
 import com.github.giveme0101.service.IOrderService;
+import org.spring.framework.SpringApplication;
 import org.spring.framework.core.annotation.ComponentScan;
 import org.spring.framework.core.annotation.Import;
-import org.spring.framework.core.context.AnnotationConfigApplicationContext;
 import org.spring.framework.core.context.ApplicationContext;
 
 import java.util.Date;
@@ -29,8 +29,7 @@ public class TestMain {
 
     public static void main(String[] args) {
 
-        ApplicationContext context = new AnnotationConfigApplicationContext();
-        context.run(TestMain.class);
+        ApplicationContext context = SpringApplication.run(TestMain.class, args);
 
         IOrderService orderService = context.getBean(IOrderService.class);
 
