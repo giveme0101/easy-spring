@@ -31,6 +31,19 @@ A sample IOC framework like spring, ^^
 
 ## web
 
+```
+如何启用webmvc:
+
+    ApplicationContext context = new WebApplicationContext();
+    context.run(config.class);
+或 
+    1.
+        配置类添加@EnableWebMvc注解    
+    2.
+        ApplicationContext context = new AnnotationConfigApplicationContext();
+        context.run(config.class);
+```
+
 * [x] @RestController
 * [x] Netty
 
