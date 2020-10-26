@@ -45,8 +45,12 @@ A sample IOC framework like spring, ^^
 ```
 
 * [x] @RestController
+* [x] @GetMapping
+* [x] @PostMapping
+* [x] @PathVariable
+* [x] @RequestParam
+* [x] @RequestBody
 * [x] Netty
-
 
 ### AOP 
 ```
